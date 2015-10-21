@@ -1,9 +1,12 @@
-#omniscience = require("scripts/omniscience.js");
+omniscience = require("omniscience");
 
 enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me']
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
 
 module.exports = (robot) ->
+  robot.respond /ping/, (res) ->
+    res.send omniscience.ping()
+    
   robot.respond /bless (.*)/, (res) ->
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
