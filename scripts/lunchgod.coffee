@@ -33,6 +33,10 @@ module.exports = (robot) ->
     else if blessings == 0
       res.send "#{target} is neutral in My eyes."
 
+  robot.hear /lunchgod/i, (res) ->
+    name = res.message.user.name
+    res.send "@#{name}: How darest thou use My Name in vain?!"
+
   robot.enter (res) ->
     name = res.message.user.name
     res.send "@#{name}: " + res.random enterReplies
