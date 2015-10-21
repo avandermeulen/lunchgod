@@ -1,4 +1,4 @@
-omniscience = require("scripts/omniscience.js");
+#omniscience = require("scripts/omniscience.js");
 
 enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me']
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
@@ -33,7 +33,7 @@ module.exports = (robot) ->
     else if blessings == 0
       res.send "#{target} is neutral in My eyes."
 
-  robot.hear /lunchgod/i, (res) ->
+  robot.hear /lunch[ ]?god/i, (res) ->
     name = res.message.user.name
     res.send "@#{name}: How darest thou use My Name in vain?!"
 
