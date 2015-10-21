@@ -6,7 +6,17 @@ var omniscience =
     "ping": function()
     {
         return "I AM AWAKE";
-    }   
+    },
+    
+    "list": function(location)
+    {
+        // TODO
+        return [
+            {
+                "name": "tios",
+            }
+        ];
+    }
 };
 `
 ##
@@ -16,8 +26,12 @@ enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Co
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
 
 module.exports = (robot) ->
-  robot.respond /ping/, (res) ->
+  robot.respond /dev.ping/, (res) ->
     res.send omniscience.ping()
+  
+  robot.respond /dev.list (.*)/, (res) ->
+    location = res.match[1]
+    res.send("```" + JSON.stringify(omniscience.list(location), null, "\t") + "```")
     
   robot.respond /bless (.*)/, (res) ->
     target = res.match[1]
