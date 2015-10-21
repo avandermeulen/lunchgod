@@ -1,6 +1,8 @@
 enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me']
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
 
+testList = ['Banditos', 'TK Wu', 'Broken Egg', 'Grizzly Peak', 'Blue Tractor']
+
 maxBless = 10
 minBless = -10
 
@@ -54,3 +56,13 @@ module.exports = (robot) ->
   robot.leave (res) ->
     name = res.message.user.name
     res.send "@#{name}: " + res.random leaveReplies
+
+  weightedRandom (list) ->
+    index = Math.floor(Math.random() * list.length)
+    location = list[index]
+    blessing = robot.brain.get(location.toLowerCase()) || 0
+    if ((blessing + 10)/20 >= Math.random())
+      return location
+    else
+      return weightedRandom(list)
+
