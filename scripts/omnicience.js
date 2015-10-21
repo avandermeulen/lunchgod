@@ -1,8 +1,7 @@
-
-module.exports = function Omniscience()
+var omniscience = 
 {
-    this.ping = function()
+    "ping": function()
     {
         return "I AM AWAKE";
-    };
+    }   
 };
