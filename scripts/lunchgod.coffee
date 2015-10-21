@@ -1,4 +1,4 @@
-omniscience = require("omniscience");
+omniscience = require("omniscience.js");
 
 enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me']
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
