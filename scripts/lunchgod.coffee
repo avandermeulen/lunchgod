@@ -7,6 +7,7 @@ module.exports = (robot) ->
     res.send "Blessed art #{target}."
 
   robot.enter (res) ->
-    res.send res.random enterReplies
+    name = res.message.user.name
+    res.send name + res.random enterReplies
   robot.leave (res) ->
-    res.send res.random leaveReplies
+    res.send name + res.random leaveReplies
