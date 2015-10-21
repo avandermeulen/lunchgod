@@ -25,7 +25,7 @@ module.exports = (robot) ->
       res.send "A single curse upon #{target}."
     else if blessings < -1
       curses = blessings * -1
-      "#{curses} curses upon #{target}."
+      res.send "#{curses} curses upon #{target}."
     else if blessings > 1
       res.send "#{blessings} blessings upon #{target}."
     else if blessings == 0
