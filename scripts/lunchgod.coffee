@@ -35,7 +35,7 @@ module.exports = (robot) ->
 
   robot.hear /.+ lunch[ ]?god/i, (res) ->
     name = res.message.user.name
-    res.send "@#{name}: How darest thou use My Name in vain?!"
+    res.send "@#{name}: Thou shalt not take My Name in vain!"
 
   robot.enter (res) ->
     name = res.message.user.name
