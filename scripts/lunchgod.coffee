@@ -8,10 +8,10 @@ module.exports = (robot) ->
     robot.brain.set(target, blessings + 1)
     res.send "Blessed art #{target}."
 
-  robot.respond /howed bessed art (.*)?/, (res) ->
+  robot.respond /how blessed art (.*)\?/, (res) ->
     target = res.match[1]
     blessings = robot.brain.get(target) || 0
-    if blessings is 1
+    if blessings == 1
       res.send "A single blessing upon #{target}."
     else
       res.send "#{blessings} blessings upon #{target}."
