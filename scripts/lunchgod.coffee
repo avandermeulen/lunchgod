@@ -72,7 +72,7 @@ module.exports = (robot) ->
     res.send "I can not hear thou."
 
   robot.respond /SHOW US THE WAY!/, (res) ->
-    res.send "404, omniscience not found"
+    res.send weightedRandom(testList)
 
   robot.hear /.+ lunch[ ]?god/i, (res) ->
     name = res.message.user.name
