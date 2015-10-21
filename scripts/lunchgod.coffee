@@ -85,12 +85,12 @@ module.exports = (robot) ->
     name = res.message.user.name
     res.send "@#{name}: " + res.random leaveReplies
 
-  weightedRandom (list) ->
-    index = Math.floor(Math.random() * list.length)
-    location = list[index]
-    blessing = robot.brain.get(location.toLowerCase()) || 0
-    if ((blessing + 10)/20 >= Math.random())
-      return location
-    else
-      return weightedRandom(list)
+weightedRandom (list, robot) ->
+  index = Math.floor(Math.random() * list.length)
+  location = list[index]
+  blessing = robot.brain.get(location.toLowerCase()) || 0
+  if ((blessing + 10)/20 >= Math.random())
+    return location
+  else
+    return weightedRandom(list)
 
