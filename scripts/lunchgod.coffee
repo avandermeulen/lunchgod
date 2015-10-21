@@ -29,7 +29,7 @@ module.exports = (robot) ->
     else if blessings > 1
       res.send "#{blessings} blessings upon #{target}."
     else if blessings == 0
-      res.send "#target is neutral in My eyes."
+      res.send "#{target} is neutral in My eyes."
 
   robot.enter (res) ->
     name = res.message.user.name
