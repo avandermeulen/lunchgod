@@ -4,13 +4,14 @@ leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cas
 module.exports = (robot) ->
   robot.respond /bless (.*)/, (res) ->
     target = res.match[1]
-    blessings = robot.brain.get(target) || 0
-    robot.brain.set(target, blessings + 1)
+    blessings = robot.brain.get(target.toLowerCase()) || 0
+    robot.brain.set(target.toLowerCase(), blessings + 1)
     res.send "Blessed art #{target}."
+    robot.brain.save()
 
   robot.respond /how blessed art (.*)\?/, (res) ->
     target = res.match[1]
-    blessings = robot.brain.get(target) || 0
+    blessings = robot.brain.get(target.toLowerCase()) || 0
     if blessings == 1
       res.send "A single blessing upon #{target}."
     else
