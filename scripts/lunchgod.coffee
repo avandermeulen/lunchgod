@@ -8,6 +8,7 @@ module.exports = (robot) ->
 
   robot.enter (res) ->
     name = res.message.user.name
-    res.send name + res.random enterReplies
+    res.send "@#{name}: " + res.random enterReplies
   robot.leave (res) ->
-    res.send name + res.random leaveReplies
+    name = res.message.user.name
+    res.send "@#{name}: " + res.random leaveReplies
