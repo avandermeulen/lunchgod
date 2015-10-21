@@ -1,5 +1,5 @@
 
-module.exports = (omniscience) -> 
+module.exports =
     {
         "ping": function(response)
         {
