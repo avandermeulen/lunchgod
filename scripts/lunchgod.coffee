@@ -9,13 +9,27 @@ module.exports = (robot) ->
     res.send "Blessed art #{target}."
     robot.brain.save()
 
+  robot.respond /curse (.*)/, (res) ->
+    target = res.match[1]
+    blessings = robot.brain.get(target.toLowerCase()) || 0
+    robot.brain.set(target.toLowerCase(), blessings - 1)
+    res.send "Cursed art #{target}."
+    robot.brain.save()
+
   robot.respond /how blessed art (.*)\?/, (res) ->
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
     if blessings == 1
       res.send "A single blessing upon #{target}."
-    else
+    else if blessings == -1
+      res.send "A single curse upon #{target}."
+    else if blessings < -1
+      curses = blessings * -1
+      "#{curses} curses upon #{target}."
+    else if blessings > 1
       res.send "#{blessings} blessings upon #{target}."
+    else if blessings == 0
+      res.send "#target is neutral in My eyes."
 
   robot.enter (res) ->
     name = res.message.user.name
