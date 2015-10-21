@@ -1,0 +1,33 @@
+{
+  "name": "omniscience",
+  "version": "0.0.4",
+  "description": "the lunch god's raw knowledge about everything",
+  "main": "omniscience.js",
+  
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  
+  "dependencies":
+  {
+    "node-yelp": "*"
+  },
+  
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jbickerstaff/lunchgod-omniscience.git"
+  },
+  
+  "keywords": [
+    "lunchgod",
+    "lunch",
+    "god",
+    "mybuys",
+    "magnetic",
+    "hackathon",
+    "wariscoming"
+  ],
+  
+  "author": "lunchgod hackathon team",
+  "license": "none. back off. mind your own business."
+}
