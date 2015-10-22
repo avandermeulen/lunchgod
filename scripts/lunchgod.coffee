@@ -72,12 +72,20 @@ petitionListIsDirty = false
 makePetition = (robot, res) ->
   channel = res.message.room
   user = res.message.user.name
-
+  console.log("@@@ channel: " + channel)
+  console.log("@@@ user:    " + user)
+  
+  if not canPetition(robot, res)
+    return false
+  
   shoreUpPetitionsList(robot)
   petitionListIsDirty = true
 
   petitions = petitionsMadeTodayByLocation[channel]
+  console.log("@@@ petitions:\n" + JSON.stringify(petitions, undefined, "\t"));
+  
   if not petitions
+    console.log("@@@ creating new channel in petitions list");
     petitions = []
     petitionsMadeTodayByLocation[channel] = petitions
 
