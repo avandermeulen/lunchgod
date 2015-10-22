@@ -79,7 +79,7 @@ module.exports = (robot) ->
     if blessings < maxBless
       robot.brain.set(target.toLowerCase(), blessings + 1)
       robot.brain.save()
-    res.send "Blessed art #{target}."
+    res.reply "Blessed art #{target}."
 
   robot.respond /pray (.*)/, (res) ->
     waitASec
@@ -88,7 +88,7 @@ module.exports = (robot) ->
     if prays < maxPray
       robot.brain.set(target.toLowerCase(), prays + 1)
       robot.brain.save()
-    res.send "Prayed art #{target}."
+    res.reply "Prayed art #{target}."
 
   robot.respond /curse (.*)/, (res) ->
     waitASec
@@ -97,26 +97,32 @@ module.exports = (robot) ->
     if blessings > minBless
       robot.brain.set(target.toLowerCase(), blessings - 1)
       robot.brain.save()
-    res.send "Cursed art #{target}."
+    res.reply "Cursed art #{target}."
 
   robot.respond /how blessed art (.*)\?/, (res) ->
     waitASec
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
     if blessings == 0
-      res.send "#{target} art profane."
+      res.reply "#{target} art profane."
     else if blessings == maxBless
-      res.send "#{target} art holy."
+      res.reply "#{target} art holy."
     else if blessings == minBless
-      res.send "#{target} art excommunicated."
+      res.reply "#{target} art excommunicated."
     else if blessings > 0
-      res.send "#{target} art blessed."
+      res.reply "#{target} art blessed."
     else if blessings < 0
-      res.send "#{target} art cursed."
+      res.reply "#{target} art cursed."
+
+  robot.respond /we dwell at (.*)/, (res) ->
+    waitASec
+    location = res.match[1]
+    channel = res.channel
+    res.reply channel + ": " + location
 
   robot.respond /show us the way[!]?/, (res) ->
     waitASec
-    res.send "I can not hear thou."
+    res.reply "I can not hear thou."
 
   robot.respond /SHOW US THE WAY!/, (res) ->
     waitASec
@@ -125,17 +131,17 @@ module.exports = (robot) ->
   robot.hear /.+ lunch[ ]?god/i, (res) ->
     waitASec
     name = res.message.user.name
-    res.send "@#{name}: Thou shalt not take My Name in vain!"
+    res.reply "Thou shalt not take My Name in vain!"
 
   robot.enter (res) ->
     waitASec
     name = res.message.user.name
-    res.send "@#{name}: " + res.random enterReplies
+    res.reply res.random enterReplies
 
   robot.leave (res) ->
     waitASec
     name = res.message.user.name
-    res.send "@#{name}: " + res.random leaveReplies
+    res.reply res.random leaveReplies
 
   weightedRandom = (list) ->
     index = Math.floor(Math.random() * list.length)
@@ -147,4 +153,4 @@ module.exports = (robot) ->
       return weightedRandom(list)
 
 waitASec = () ->
-  sleep(Math.floor(Math.random() * (1000 - 200)) + 200)
+  sleep(Math.floor(Math.random() * (1500 - 500)) + 500)
