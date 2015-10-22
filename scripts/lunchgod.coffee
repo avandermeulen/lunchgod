@@ -117,8 +117,9 @@ module.exports = (robot) ->
   robot.respond /we dwell (in|at) (.*)/, (res) ->
     waitASec
     location = res.match[2]
-    channel = res.message.channel
-    res.reply channel + ": " + location
+    channel = res.message.user.channel
+    res.reply res
+    #res.reply channel + ": " + location
 
   robot.respond /show us the way[!]?/, (res) ->
     waitASec
