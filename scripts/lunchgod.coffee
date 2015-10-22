@@ -118,6 +118,12 @@ syncPetitionsList = (robot) ->
   petitionListIsDirty = false
 
 module.exports = (robot) ->
+  robot.respond /who am i\?/i, (res) ->
+    res.reply(res.message.user.name)
+  
+  robot.respond /where am i\?/i, (res) ->
+    res.reply(res.message.room)
+    
   robot.respond /i would like to join this congregation/i, (res) ->
     waitASec
     channel = res.message.room
@@ -133,7 +139,7 @@ module.exports = (robot) ->
     channel = res.message.room
     user = res.message.user.name
     can = canPetition(robot, res)
-    if (can)
+    if (not can)
       res.send("yes, " + user + "@" + channel + ", my child, you walk in my aroma")
     else
       res.send("no, " + user + "@" + channel + ", i find your lack of faith is disturbing")
