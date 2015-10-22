@@ -38,9 +38,9 @@ lunchMe = (robot, res, location, query) ->
 
   # Perform the search
   #msg.send("Looking for #{query} around #{location}...")
-  yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 30, location: location, (error, data) ->
+  yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 20, location: location, (error, data) ->
     if error != null
-      return error
+      return "..."
 
     if data.total == 0
       return "...."
@@ -136,6 +136,7 @@ module.exports = (robot) ->
   
   robot.respond /yelp me(.*)/i, (res) ->
     query = res.match[1]
+    listenToGod(res)
     lunchMe res, query, false
   robot.respond /init/, (res) ->
     waitASec
@@ -230,3 +231,12 @@ module.exports = (robot) ->
 
 waitASec = () ->
   sleep(Math.floor(Math.random() * (1500 - 500)) + 500)
+
+listenUrls = [
+  "http://barbwire.wpengine.netdna-cdn.com/wp-content/uploads/2015/01/hearinggod.jpg"
+  "http://www.stewardshipoflife.org/wordpress/wp-content/uploads/2011/01/3133347219_4c16658dd51-370x280.jpg"
+  "http://newcsj.squarespace.com/storage/listen.png?__SQUARESPACE_CACHEVERSION=1427384743876"
+  "http://sevenstorylearning.com/wp-content/uploads/2011/05/Listen-by-BRosen.jpg"
+]
+listenToGodImg (msg) ->
+  return msg.random listenUrls
