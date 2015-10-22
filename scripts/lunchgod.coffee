@@ -63,7 +63,8 @@ weightedRandom = (robot, res, data) ->
       history = robot.brain.get(channelKey) || []
       if (location.is_closed == false && location.name not in history && (blessing + maxBless)/range >= Math.random())
         history.push(location.name)
-        history.shift()
+        if history.length > 5
+          history.shift()
         robot.brain.set(channelKey, history)
         robot.brain.save()
         return "On this day, thou shalt go unto " + location.name + " and be fed. " + location.url
