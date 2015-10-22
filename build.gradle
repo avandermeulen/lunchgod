@@ -15,21 +15,6 @@ task clean << {
     delete('scripts/lunchgod.coffee')
 }
 
-task compileLunchGod(dependsOn: 'clean', type: Copy) {
-    // read the parts of the lunch god
-    def omniscience = new File('scripts/omniscience.js').text
-    def omnipotence = new File('scripts/omnipotence.coffee').text
-    
-    // inject them into any occurence of @omniscience@, or @omnipotence@ in
-    // any file with a name containing "_template"
-    from('scripts/') {
-        include '*_template'
-        rename '(.*)_template', '$1'
-        filter(ReplaceTokens, tokens: [ 'omniscience': omniscience, 'omnipotence': omnipotence ])
-    }
-    into 'scripts'
-}
-
 task build(dependsOn: [ files('scripts/lunchgod.coffee'), 'compileLunchGod' ] ) << {
     // tell everyone what we're doing here
     println('Creating the Lunch God...')
@@ -43,3 +28,38 @@ task deploy << {
     }
 }
 
+task compileLunchGod(dependsOn: [ 'clean', 'compileOmnipresence', type: Copy) {
+    // read the parts of the lunch god
+    def omnipresence = file('scripts/omnipresence.js').text
+    def omniscience = file('scripts/omniscience.js').text
+    def omnipotence = file('scripts/omnipotence.coffee').text
+    
+    // inject them into any occurence of @omniscience@, or @omnipotence@ in
+    // any file with a name containing "_template"
+    from('scripts/') {
+        include 'lunchgod.coffee_template'
+        rename '(.*)_template', '$1'
+        filter(ReplaceTokens, tokens: [ 'omnipresence': omnipresence, 'omniscience': omniscience, 'omnipotence': omnipotence ])
+    }
+    into 'scripts/'
+}
+
+task compileOmnipresence(dependsOn: [ 'clean', 'musterOmnipresence' ], type: Copy) << {
+    println('Compiling the Lunch God's omnipresence...')
+    
+    // read the database file created by muster
+    def database = file('scripts/database.json').text
+    
+    // inject them into the omnipresence script
+    from('scripts/') {
+        include 'omnipresence_template.js'
+        rename '(.*)_template', '$1'
+        filter(ReplaceTokens, tokens [ 'database', database ]);
+    }
+    into 'scripts/'
+}
+
+task musterOmnipresence << {
+    delete('scripts/database.json')
+    node run build_database
+}
