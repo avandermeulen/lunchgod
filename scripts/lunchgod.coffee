@@ -59,24 +59,41 @@ weightedRandom = (robot, res, data) ->
 
 petitionsMadeTodayByLocation = {}
 
-makePetition = (office, user) ->
+makePetition = (robot, res, office) ->
   office = office.toUpperCase()
+  user = res.message.user.name
+  
+  if not canPetition robot, res, office, user
+    return false
+    
   petitions = petitionsMadeTodayByLocation[office]
   if not petitions
     petitions = []
     petitionsMadeTodayByLocation[office] = petitions
-  petitions.push user
   
-canPetition = (office, user) ->
+  petitions.push user
+  syncPetitionsList(robot)
+  return true
+  
+canPetition = (robot, res, office) ->
   office = office.toUpperCase()
+  user = res.message.user.name
   petitions = petitionsMadeTodayByLocation[office] or []
   return user not in petitions
 
-clearDailyPetitionsByOffice = (office) ->
+clearDailyPetitionsByOffice = (robot, office) ->
   office = office.toUpperCase()
   petitionsMadeTodayByLocation[office] = []
+  syncPetitionsList(robot)
+
+syncPetitionsList = (robot) ->
+  println("persiting petition list!!!")
+  robot.brain.set("global.petitionsMadeTodayByLocation", petitionsMadeTodayByLocation)
   
 module.exports = (robot) ->
+  storedPetitionsList = robot.brain.get("global.petitionsMadeTodayByLocation")
+  petitionsMadeTodayByLocation = storedPetitionsList if storedPetitionsList
+
   robot.respond /dev makePetition (.*)/i, (res) ->
     office = res.match[1]
     user = res.message.user.name
