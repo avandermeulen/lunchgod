@@ -15,6 +15,7 @@ maxBless = 10
 minBless = -10
 maxPray = 5
 minPray = -5
+maxDenounceCount = 3
 
 PRAYER_PROBABILITY = .05
 
@@ -59,13 +60,15 @@ weightedRandom = (robot, res, data) ->
     if location
       blessing = robot.brain.get(location.name.toLowerCase()) || 0
       channel = res.message.room
-      channelKey = "#{channel}.history"
-      history = robot.brain.get(channelKey) || []
+      channelHistoryKey = "#{channel}.history"
+      history = robot.brain.get(channelHistoryKey) || []
+      channelDenounceKey = "#{channel}.denounceCount"
       if (location.is_closed == false && location.name not in history && (blessing + maxBless)/range >= Math.random())
         history.push(location.name)
         if history.length > 5
           history.shift()
-        robot.brain.set(channelKey, history)
+        robot.brain.set(channelHistoryKey, history)
+        robot.brain.set(channelDenounceKey, 0)
         robot.brain.save()
         return "*On this day, thou shalt go unto " + location.name + " and be fed. *" + location.url
       else
@@ -152,6 +155,20 @@ module.exports = (robot) ->
   robot.hear /I listen to you/i, (msg) ->
     sleep(4000)
     msg.send msg.random listenUrls
+
+  robot.hear /denounce/i, (res) ->
+    blessing = robot.brain.get(location.name.toLowerCase()) || 0
+    channel = res.message.room
+    channelDenounceKey = "#{channel}.denounceCount"
+    if canPetition(robot, res)
+      denounceCount = robot.brain.get(channelDenounceKey)
+      makePetition(robot, res)
+      denounceCount ++
+      if denounceCount >= maxDenounceCount
+        lunchMe(robot, res, location, "food")
+      else
+        robot.brain.set(channelDenounceKey, denounceCount)
+        robot.brain.save()
 
   robot.respond /show me the history/i, (res) ->
     channel = res.message.room
