@@ -143,7 +143,7 @@ module.exports = (robot) ->
   robot.respond /who am i\?/i, (res) ->
     res.reply(res.message.user.name)
   
-  robot.respond /where am i\?/i, (res) ->
+  robot.respond /where (?:(?:am i)|(?:are we))\?/i, (res) ->
     res.reply(res.message.room)
 
   robot.respond /read (?:(?:my)|(?:our)) prayers back to (?:(?:me)|(?:us))/i, (res) ->
@@ -151,7 +151,7 @@ module.exports = (robot) ->
     msg += (petitionType + ": " + getPetition(robot, res, petitionType) + "\n") for petitionType in PETITION_TYPES
     res.send(msg.trim())
     
-  robot.respond /show me your faithful/, (res) ->
+  robot.respond /show (?:(?:me)|(?:us)) your faithful/, (res) ->
     waitASec
     shoreUpFaithful(robot)
     res.send("```" + JSON.stringify(todaysFaithful, null, "\t") + "```")
@@ -188,7 +188,7 @@ module.exports = (robot) ->
         robot.brain.set(channelDenounceKey, denounceCount)
         robot.brain.save()
 
-  robot.respond /show me the history/i, (res) ->
+  robot.respond /show (?:(?:me)|(?:us)) the history/i, (res) ->
     channel = res.message.room
     channelKey = "#{channel}.history"
     history = robot.brain.get(channelKey) || []
