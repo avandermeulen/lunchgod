@@ -13,7 +13,7 @@ maxBless = 10
 minBless = -10
 maxDenounceCount = 2
 
-REST_TIME = process.env.LUNCHGOD_REST_TIME
+REST_TIME = parseInt(process.env.LUNCHGOD_REST_TIME)
 PRAYER_PROBABILITY = process.env.PRAYER_PROBABILITY
 
 range = (maxBless - minBless)
@@ -287,7 +287,7 @@ doWork = (robot, res) ->
   now = new Date().getTime()
   channel = res.message.room
   channelKey = "#{channel}.lastRun"
-  lastRun = robot.brain.get(channelKey) || 0
+  lastRun = parseInt(robot.brain.get(channelKey)) || 0
   res.send "now:#{now}, lastRun:#{lastRun}, REST_TIME:#{REST_TIME}"
   if lastRun + REST_TIME > now
     return false
