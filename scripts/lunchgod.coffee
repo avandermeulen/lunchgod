@@ -92,9 +92,9 @@ setPetition = (robot, res, petitionType, value) ->
   setPetitionNoSave(robot, res, petitionType, value)
   robot.brain.save()
 
-makePetition = (robot, res) ->
+makePetition = (robot, res, user) ->
   channel = res.message.room
-  user = res.message.user.name
+  user = user || res.message.user.name
   
   if not canPetition(robot, res)
     return false
@@ -253,7 +253,7 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     robot.brain.set(channel.toLowerCase(), location)
     robot.brain.save()
-    res.send "*Henceforth My light shalt shine upon #{location}*"
+    res.send "*Henceforth My aroma shalt shine upon #{location}*"
 
   robot.respond /show us the way[!]?/, (res) ->
     waitASec
@@ -267,9 +267,9 @@ module.exports = (robot) ->
     location = robot.brain.get("#" + channel.toLowerCase())
     if location
       if doWork(robot, res)
+        lunchMe(robot, res, location)
         clearFaithfulByChannel(robot, res)
         clearPetitions(robot, res)
-        lunchMe(robot, res, location, "food")
       else
         res.send "*I am resting...*"
     else
