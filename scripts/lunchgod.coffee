@@ -61,13 +61,14 @@ weightedRandom = (robot, res, data) ->
       return "....."
 
 petitionsMadeTodayByLocation = {}
+petitionListIsDirty = false
 
 makePetition = (robot, res, office) ->
   office = office.toUpperCase()
   user = res.message.user.name
   
-  if not canPetition robot, res, office, user
-    return false
+  shoreUpPetitionsList(robot)
+  petitionListIsDirty = true
     
   petitions = petitionsMadeTodayByLocation[office]
   if not petitions
@@ -81,24 +82,29 @@ makePetition = (robot, res, office) ->
 canPetition = (robot, res, office) ->
   office = office.toUpperCase()
   user = res.message.user.name
+  shoreUpPetitionsList(robot)
   petitions = petitionsMadeTodayByLocation[office] or []
   return user not in petitions
 
 clearDailyPetitionsByOffice = (robot, office) ->
+  shoreUpPetitionsList(robot)
+  petitionListIsDirty = true
   office = office.toUpperCase()
   petitionsMadeTodayByLocation[office] = []
   syncPetitionsList(robot)
+
+shoreUpPetitionsList = (robot) ->
+  console.log("attempting to load the god's master petition list");
+  storedPetitionsList = robot.brain.get("global.petitionsMadeTodayByLocation")
+  petitionsMadeTodayByLocation = storedPetitionsList if storedPetitionsList and not petitionListIsDirty
 
 syncPetitionsList = (robot) ->
   console.log("persiting petition list!!!")
   robot.brain.set("global.petitionsMadeTodayByLocation", petitionsMadeTodayByLocation)
   robot.brain.save()
+  petitionListIsDirty
   
 module.exports = (robot) ->
-  console.log("attempting to load the god's master petition list");
-  storedPetitionsList = robot.brain.get("global.petitionsMadeTodayByLocation")
-  petitionsMadeTodayByLocation = storedPetitionsList if storedPetitionsList
-
   robot.respond /i would like to join the (.*) congregation/i, (res) ->
     office = res.match[1].trim()
     user = res.message.user.name
