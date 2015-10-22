@@ -171,7 +171,7 @@ module.exports = (robot) ->
     res.reply "Channel: " + channel
     #res.reply channel + ": " + location
 
-  robot.respond /show us the way/i, (res) ->
+  robot.respond /show us the way[!]?/, (res) ->
     waitASec
     res.reply "I can not hear thou."
 
