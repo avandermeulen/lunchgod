@@ -76,7 +76,7 @@ weightedRandom = (robot, res, data) ->
 petitionsMadeTodayByLocation = {}
 petitionListIsDirty = false
 
-getPetition = (robot, res, petitionType)
+getPetition = (robot, res, petitionType) ->
   return robot.brain.get(res.message.room + ".petitions." + petitionType)
 
 setPetition = (robot, res, petitionType, value) ->
