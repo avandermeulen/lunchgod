@@ -59,7 +59,7 @@ weightedRandom = (robot, res, data) ->
     if location
       console.log(JSON.stringify(location))
       blessing = robot.brain.get(location.name.toLowerCase()) || 0
-      if ((blessing + maxBless)/range >= Math.random())
+      if (location.is_closed == false && (blessing + maxBless)/range >= Math.random())
         return "On this day, thou shalt go unto " + location.name + " and be fed. " + location.url
       else
         return weightedRandom(robot, res, data)
@@ -75,11 +75,12 @@ makePetition = (robot, res) ->
   
   if not canPetition(robot, res)
     return false
-  
+
   shoreUpPetitionsList(robot)
   petitionListIsDirty = true
 
   petitions = petitionsMadeTodayByLocation[channel]
+
   if not petitions
     petitions = []
     petitionsMadeTodayByLocation[channel] = petitions
@@ -144,6 +145,22 @@ module.exports = (robot) ->
   robot.hear /I listen to you/i, (msg) ->
     sleep(4000)
     msg.send msg.random listenUrls
+
+  robot.hear /pray/i, (res) ->
+    waitASec()
+    channel = res.message.room
+    user = res.message.user.name
+    userList = robot.brain.get("prayers.#{channel}") || []
+    userList.push(user)
+    robot.brain.set("prayers.#{channel}", userList)
+    robot.brain.save()
+
+  robot.hear /who prayed\?/i, (res) ->
+    waitASec()
+    channel = res.message.room
+    user = res.message.user.name
+    userList = robot.brain.get("prayers.#{channel}") || []
+    res.send "Prayers: " + JSON.stringify(userList)
 
   robot.respond /init/, (res) ->
     waitASec
