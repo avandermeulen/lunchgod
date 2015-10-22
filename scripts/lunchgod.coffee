@@ -108,22 +108,23 @@ module.exports = (robot) ->
   robot.respond /i would like to join the (.*) congregation/i, (res) ->
     channel = res.match[1].trim()
     user = res.message.user.name
-    makePetition(robot, res, channel)
+    makePetition(robot, res)
     res.send("added " + user + "@" + channel + " to daily petitions list");
   
-  robot.respond /have i been faithful to the congregation of (.*)\?/i, (res) ->
-    channel = res.match[1].trim()
+  robot.respond /have i been faithful\?/i, (res) ->
+    channel = res.message.room
     user = res.message.user.name
     msg = "can"
-    msg = "cannot" if not canPetition(robot, res, channel)
+    msg = "cannot" if not canPetition(robot, res)
     res.send(user + "@" + channel + " " + msg + " petition again today")
     
-  robot.respond /absolve the (.*) congregation of their sins/i, (res) ->
-    channel = res.match[1].trim()
-    clearDailyPetitionsBychannel(robot, res, channel)
+  robot.respond /absolve my congregation of their sins!/i, (res) ->
+    channel = res.message.room
+    clearDailyPetitionsBychannel(robot, res)
     res.send("Daily petitions list for @" + channel + " has been cleared")
   
   robot.respond /show me your faithful/, (res) ->
+    shoreUpPetitionsList(robot)
     res.send("```" + JSON.stringify(petitionsMadeTodayByLocation, null, "\t") + "```");
   
   robot.respond /i pray for (.*) food/i, (res) ->
