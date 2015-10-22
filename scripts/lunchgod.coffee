@@ -77,7 +77,7 @@ clearDailyPetitionsByOffice = (robot, office) ->
   syncPetitionsList(robot)
 
 syncPetitionsList = (robot) ->
-  brain.set("global.petitionsMadeTodayByLocation", petitionsMadeTodayByLocation)
+  robot.brain.set("global.petitionsMadeTodayByLocation", petitionsMadeTodayByLocation)
   
 module.exports = (robot) ->
   storedPetitionsList = robot.brain.get("global.petitionsMadeTodayByLocation")
