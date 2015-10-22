@@ -43,12 +43,14 @@ enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Co
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
 
 testList = ['Banditos', 'TK Wu', 'Broken Egg', 'Grizzly Peak', 'Blue Tractor']
-
+testPrays = {}
+testPrays[name] = 1 for name in testList
+robot.brain.set(prayrecord,testPrays)
+robot.brain.save()
 maxBless = 10
 minBless = -10
 maxPray = 5
 minPray = -5
-
 
 consumer_key = process.env.HUBOT_YELP_CONSUMER_KEY
 consumer_secret = process.env.HUBOT_YELP_CONSUMER_SECRET
@@ -93,6 +95,7 @@ lunchMe = (msg, query, random = true) ->
     else
       business = data.businesses[0]
     msg.send("How about " + business.name + "? " + business.url)
+
 
 module.exports = (robot) ->
   robot.respond /yelp me(.*)/i, (res) ->
