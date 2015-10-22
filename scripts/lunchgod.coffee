@@ -75,8 +75,8 @@ weightedRandom = (robot, res, data) ->
   else
     return "....."
 
-todaysFaithful = {}
-faithfulLocked = false
+todaysPetitioners = {}
+petitionersLocked = false
 
 PETITION_TYPES = [
   "preference",
@@ -100,41 +100,41 @@ makePetition = (robot, res, user) ->
   if not canPetition(robot, res)
     return false
 
-  shoreUpFaithful(robot)
-  faithfulLocked = true
+  shoreUpPetitioners(robot)
+  petitionersLocked = true
 
-  petitions = todaysFaithful[channel]
+  petitions = todaysPetitioners[channel]
 
   if not petitions
     petitions = []
-    todaysFaithful[channel] = petitions
+    todaysPetitioners[channel] = petitions
 
   petitions.push user
-  syncFaithful(robot)
+  syncPetitioners(robot)
   return true
 
 canPetition = (robot, res) ->
   channel = res.message.room
   user = res.message.user.name
-  shoreUpFaithful(robot)
-  petitions = todaysFaithful[channel] or []
+  shoreUpPetitioners(robot)
+  petitions = todaysPetitioners[channel] or []
   return user not in petitions
 
-clearFaithfulByChannel = (robot, res) ->
+clearPetitionersByChannel = (robot, res) ->
   channel = res.message.room
-  shoreUpFaithful(robot)
-  faithfulLocked = true
-  todaysFaithful[channel] = []
-  syncFaithful(robot)
+  shoreUpPetitioners(robot)
+  petitionersLocked = true
+  todaysPetitioners[channel] = []
+  syncPetitioners(robot)
   
-shoreUpFaithful = (robot) ->
-  storedPetitionsList = robot.brain.get("global.todaysFaithful")
-  todaysFaithful = storedPetitionsList if storedPetitionsList and not faithfulLocked
+shoreUpPetitioners = (robot) ->
+  storedPetitionsList = robot.brain.get("global.todaysPetitioners")
+  todaysPetitioners = storedPetitionsList if storedPetitionsList and not petitionersLocked
 
-syncFaithful = (robot) ->
-  robot.brain.set("global.todaysFaithful", todaysFaithful)
+syncPetitioners = (robot) ->
+  robot.brain.set("global.todaysPetitioners", todaysPetitioners)
   robot.brain.save()
-  faithfulLocked = false
+  petitionersLocked = false
 
 clearPetitions = (robot, res) ->
   setPetition(robot, res, petitionType, null) for petitionType in PETITION_TYPES
@@ -151,10 +151,10 @@ module.exports = (robot) ->
     msg += (petitionType + ": " + getPetition(robot, res, petitionType) + "\n") for petitionType in PETITION_TYPES
     res.send(msg.trim())
     
-  robot.respond /show (?:(?:me)|(?:us)) your faithful/, (res) ->
+  robot.respond /show (?:(?:me)|(?:us)) your petitioners/, (res) ->
     waitASec
-    shoreUpFaithful(robot)
-    res.send("```" + JSON.stringify(todaysFaithful, null, "\t") + "```")
+    shoreUpPetitioners(robot)
+    res.send("```" + JSON.stringify(todaysPetitioners, null, "\t") + "```")
 
   robot.respond /hear +(?:(?:my)|(?:our)) +prayers?[.,:!;]? +(?:(?:(?:(?:i +am)|(?:i'?m)|(?:we +are)|(?:we'?re)) +(?:(?:(?:(?:in +the +mood)|(?:hungry)) +for)|(?:craving)|(?:feeling)))|(?:(?:(?:i)|(?:we))(?: +have +a +hankering +for)|(?: +could +go +for)|(?: +want)|(?: +would +(?:(?:like)|(?:prefer))))|(?:(?:(?:i)|(?:we)) +feel +like))(?: +(?:(?:some)|(?:a)))? +(.+)/i, (res) ->
     waitASec
@@ -269,7 +269,7 @@ module.exports = (robot) ->
       if doWork(robot, res)
         res.send "http://media.giphy.com/media/KJYUwoRXeQGxW/giphy.gif"
         lunchMe(robot, res, location)
-        clearFaithfulByChannel(robot, res)
+        clearPetitionersByChannel(robot, res)
         clearPetitions(robot, res)
       else
         res.send "*I am resting...*"
