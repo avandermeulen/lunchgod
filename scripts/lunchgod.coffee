@@ -21,10 +21,8 @@ token = "UapxC4VIu4D7P6Wqpa8NK8OQLCoclwhb"
 token_secret = "PRQtr_R-GmEffFPTkZ0qSGxR_ic"
 
 # Default search parameters
-start_address = "Ann Arbor"
 radius = 1000
 sort = 0
-default_suggestion = "Broken Egg"
 
 trim_re = /^\s+|\s+$|[\.!\?]+$/g
 
@@ -41,17 +39,7 @@ lunchMe = (msg, location, query, random = true) ->
   # Perform the search
   #msg.send("Looking for #{query} around #{location}...")
   yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 20, location: location, (error, data) ->
-    if error != null
-      return msg.send "There was an error searching for #{query}. Maybe try #{default_suggestion}?"
-
-    if data.total == 0
-      return msg.send "I couldn't find any #{query} for you. Maybe try #{default_suggestion}?"
-
-    if random
-      business = data.businesses[Math.floor(Math.random() * data.businesses.length)]
-    else
-      business = data.businesses[0]
-    msg.send("How about " + business.name + "? " + business.url)
+    return data
 
 petitionsMadeTodayByLocation = {}
 
@@ -179,8 +167,7 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     location = robot.brain.get(channel.toLowerCase())
     if location
-      res.send lunchMe(res, location, "")
-      #res.send weightedRandom(testList)
+      res.send weightedRandom(lunchMe(res, location, ""))
     else
       res.send "Where dost thou dwell?"
 
@@ -197,14 +184,14 @@ module.exports = (robot) ->
     waitASec
     res.reply res.random leaveReplies
 
-  weightedRandom = (list) ->
-    index = Math.floor(Math.random() * list.length)
-    location = list[index]
+  weightedRandom = (data) ->
+    index = Math.floor(Math.random() * data.total)
+    location = data.business[index]
     blessing = robot.brain.get(location.toLowerCase()) || 0
     if ((blessing + maxBless)/range >= Math.random())
       return location
     else
-      return weightedRandom(list)
+      return weightedRandom(data)
 
 waitASec = () ->
   sleep(Math.floor(Math.random() * (1500 - 500)) + 500)
