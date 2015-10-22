@@ -49,7 +49,7 @@ minBless = -10
 maxPray = 5
 minPray = -5
 
-
+testData = require('data.coffee').testData
 
 module.exports = (robot) ->
   robot.respond /dev.ping/, (res) ->
@@ -77,7 +77,7 @@ module.exports = (robot) ->
     if prays < maxPray
       robot.brain.set(target.toLowerCase(), prays + 1)
       robot.brain.save()
-    res.send "Prayed art #{target}."
+    res.send "Prayed art #{testData}."
 
   robot.respond /curse (.*)/, (res) ->
     waitASec
