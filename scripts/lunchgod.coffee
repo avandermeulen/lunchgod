@@ -52,16 +52,16 @@ minBless = -10
 maxPray = 5
 minPray = -5
 
-consumer_key = process.env.HUBOT_YELP_CONSUMER_KEY
-consumer_secret = process.env.HUBOT_YELP_CONSUMER_SECRET
-token = process.env.HUBOT_YELP_TOKEN
-token_secret = process.env.HUBOT_YELP_TOKEN_SECRET
+consumer_key = "QbaOtI4HhOIheBXDgL9Miw"
+consumer_secret = "cyVWY4CZJ-o9hPw3XuAxRQbe3YE"
+token = "UapxC4VIu4D7P6Wqpa8NK8OQLCoclwhb"
+token_secret = "PRQtr_R-GmEffFPTkZ0qSGxR_ic"
 
 # Default search parameters
-start_address = process.env.HUBOT_YELP_SEARCH_ADDRESS or "Palo Alto"
-radius = process.env.HUBOT_YELP_SEARCH_RADIUS or 600
-sort = process.env.HUBOT_YELP_SORT or 0
-default_suggestion = process.env.HUBOT_YELP_DEFAULT_SUGGESTION or "Chipotle"
+start_address = "Ann Arbor"
+radius = 1000
+sort = 0
+default_suggestion = "Broken Egg"
 
 trim_re = /^\s+|\s+$|[\.!\?]+$/g
 
