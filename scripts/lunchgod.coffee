@@ -50,8 +50,55 @@ maxPray = 5
 minPray = -5
 
 
+consumer_key = process.env.HUBOT_YELP_CONSUMER_KEY
+consumer_secret = process.env.HUBOT_YELP_CONSUMER_SECRET
+token = process.env.HUBOT_YELP_TOKEN
+token_secret = process.env.HUBOT_YELP_TOKEN_SECRET
+
+# Default search parameters
+start_address = process.env.HUBOT_YELP_SEARCH_ADDRESS or "Palo Alto"
+radius = process.env.HUBOT_YELP_SEARCH_RADIUS or 600
+sort = process.env.HUBOT_YELP_SORT or 0
+default_suggestion = process.env.HUBOT_YELP_DEFAULT_SUGGESTION or "Chipotle"
+
+trim_re = /^\s+|\s+$|[\.!\?]+$/g
+
+# Create the API client
+yelp = require("yelp").createClient consumer_key: consumer_key, consumer_secret: consumer_secret, token: token, token_secret: token_secret
+
+
+lunchMe = (msg, query, random = true) ->
+  # Clean up the query
+  query = "food" if typeof query == "undefined"
+  query = query.replace(trim_re, '')
+  query = "food" if query == ""
+
+  # Extract a location from the query
+  split = query.split(/\snear\s/i)
+  query = split[0]
+  location = split[1]
+  location = start_address if (typeof location == "undefined" || location == "")
+
+  # Perform the search
+  #msg.send("Looking for #{query} around #{location}...")
+  yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 20, location: location, (error, data) ->
+    if error != null
+      return msg.send "There was an error searching for #{query}. Maybe try #{default_suggestion}?"
+
+    if data.total == 0
+      return msg.send "I couldn't find any #{query} for you. Maybe try #{default_suggestion}?"
+
+    if random
+      business = data.businesses[Math.floor(Math.random() * data.businesses.length)]
+    else
+      business = data.businesses[0]
+    msg.send("How about " + business.name + "? " + business.url)
 
 module.exports = (robot) ->
+  robot.respond /yelp me(.*)/i, (res) ->
+    query = res.match[1]
+    lunchMe res, query, false
+
   robot.respond /dev.ping/, (res) ->
     waitASec
     res.send omniscience.ping()
