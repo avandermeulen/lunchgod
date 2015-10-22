@@ -281,6 +281,10 @@ module.exports = (robot) ->
     name = res.message.user.name
     res.reply "*Thou shalt not take My Name in vain!*"
 
+  robot.respond /nyan/, (res) ->
+    waitASec
+    res.send "http://www.cc.gatech.edu/~hays/compvision/results/proj1/dpuleri3/hybrid_gif/nyanCat.gif"
+
   robot.enter (res) ->
     waitASec
     res.reply res.random enterReplies
