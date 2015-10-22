@@ -35,7 +35,8 @@ yelp = require("yelp").createClient consumer_key: consumer_key, consumer_secret:
 
 lunchMe = (robot, res, location, query) ->
   # Clean up the query
-  query = "food" if typeof query == "undefined"
+  query = getPetition(robot, res, "preference") if typeof query == "undefined"
+  query = "food" if not query
   query = query.replace(trim_re, '')
   query = "food" if query == ""
 
@@ -154,7 +155,7 @@ module.exports = (robot) ->
     shoreUpFaithful(robot)
     res.send("```" + JSON.stringify(todaysFaithful, null, "\t") + "```")
 
-  robot.respond /hear +(?:(?:my)|(?:our)) +prayers?[.;:] +i(?:(?:(?:(?:'?m)|(?: +am)) +(?:(?:(?:(?:in +the +mood)|(?:hungry)) +for)|(?:craving)|(?:feeling)))|(?: +have +a +hankering +for)|(?: +could +go +for)|(?: +want)|(?: +would +(?:(?:like)|(?:prefer))))(?: +(?:(?:some)|(?:a)))? +([^\s]+$)/i, (res) ->
+  robot.respond /hear +(?:(?:my)|(?:our)) +prayers?[.;:] +i(?:(?:(?:(?:'?m)|(?: +am)) +(?:(?:(?:(?:in +the +mood)|(?:hungry)) +for)|(?:craving)|(?:feeling)))|(?: +have +a +hankering +for)|(?: +could +go +for)|(?: +want)|(?: +would +(?:(?:like)|(?:prefer))))(?: +(?:(?:some)|(?:a)))? +(.+)/i, (res) ->
     waitASec
     if canPetition(robot, res)
       makePetition(robot, res)
