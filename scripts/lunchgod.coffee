@@ -77,9 +77,9 @@ module.exports = (robot) ->
     lunchMe res, query, false
   robot.respond /init/, (res) ->
     waitASec
-    robot.brain.set(prayrecord,testPrays)
+    robot.brain.set('prayrecord',testPrays)
     robot.brain.save()
-    record = robot.brain.get(prayrecord)['Banditos']
+    record = robot.brain.get('prayrecord')['Banditos']
     res.reply "Banditos #{record}."
   robot.respond /dev.ping/, (res) ->
     waitASec
