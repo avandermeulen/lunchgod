@@ -253,10 +253,12 @@ module.exports = (robot) ->
     channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
     if location
-      doWork(robot, res)
-      clearFaithfulByChannel(robot, res)
-      clearPetitions(robot, res)
-      lunchMe(robot, res, location, "food")
+      if doWork(robot, res)
+        clearFaithfulByChannel(robot, res)
+        clearPetitions(robot, res)
+        lunchMe(robot, res, location, "food")
+      else
+        res.send "*I am resting...*"
     else
       res.send "*Where dost thou dwell?*"
 
@@ -282,6 +284,12 @@ waitASec = () ->
 
 doWork = (robot, res) ->
   now = new Date().getTime()
-  res.send "time: " + now
-
-
+  channel = res.message.room
+  channelKey = "#{channel}.lastRun"
+  lastRun = robot.brain.get(channelKey) || 0
+  if (lastRun + REST_TIME) < now
+    return false
+  else
+    robot.brain.set(channelKey, now)
+    robot.brain.save()
+    return true
