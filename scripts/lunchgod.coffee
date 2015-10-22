@@ -77,13 +77,13 @@ canPetition = (office, user) ->
 module.exports = (robot) ->
   robot.respond /dev makePetition (.*)/i, (res) ->
     office = res.match[1]
-    user = res.user
+    user = res.message.user.name
     makePetition(office, user)
     res.send("added " + user + "@" + office + " to daily petitions list");
   
   robot.respond /dev canPetition (.*)/i, (res) ->
     office = res.match[1]
-    user = res.user
+    user = res.message.user.name
     msg = "can"
     msg = "cannot" if not canPetition(office, user)
     
