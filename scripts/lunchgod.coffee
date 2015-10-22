@@ -70,7 +70,7 @@ module.exports = (robot) ->
       robot.brain.save()
     res.send "Blessed art #{target}."
 
-    robot.respond /pray (.*)/, (res) ->
+  robot.respond /pray (.*)/, (res) ->
     waitASec
     target = res.match[1]
     prays = robot.brain.get(target.toLowerCase()) || 0
