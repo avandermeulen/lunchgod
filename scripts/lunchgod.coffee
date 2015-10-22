@@ -15,7 +15,7 @@ maxBless = 10
 minBless = -10
 maxPray = 5
 minPray = -5
-maxDenounceCount = 3
+maxDenounceCount = 2
 
 PRAYER_PROBABILITY = .05
 
@@ -170,6 +170,7 @@ module.exports = (robot) ->
     channel = res.message.room
     channelDenounceKey = "#{channel}.denounceCount"
     if canPetition(robot, res)
+      res.send "*Your blasphemy has been noted.*"
       denounceCount = robot.brain.get(channelDenounceKey)
       makePetition(robot, res)
       denounceCount += 1
