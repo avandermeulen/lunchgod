@@ -63,34 +63,34 @@ weightedRandom = (robot, res, data) ->
 petitionsMadeTodayByLocation = {}
 petitionListIsDirty = false
 
-makePetition = (robot, res, office) ->
-  office = office.toUpperCase()
+makePetition = (robot, res) ->
+  channel = res.message.room
   user = res.message.user.name
   
   shoreUpPetitionsList(robot)
   petitionListIsDirty = true
     
-  petitions = petitionsMadeTodayByLocation[office]
+  petitions = petitionsMadeTodayByLocation[channel]
   if not petitions
     petitions = []
-    petitionsMadeTodayByLocation[office] = petitions
+    petitionsMadeTodayByLocation[channel] = petitions
   
   petitions.push user
   syncPetitionsList(robot)
   return true
   
-canPetition = (robot, res, office) ->
-  office = office.toUpperCase()
+canPetition = (robot, res) ->
+  channel = res.message.room
   user = res.message.user.name
   shoreUpPetitionsList(robot)
-  petitions = petitionsMadeTodayByLocation[office] or []
+  petitions = petitionsMadeTodayByLocation[channel] or []
   return user not in petitions
 
-clearDailyPetitionsByOffice = (robot, office) ->
+clearDailyPetitionsBychannel = (robot) ->
+  channel = res.message.room
   shoreUpPetitionsList(robot)
   petitionListIsDirty = true
-  office = office.toUpperCase()
-  petitionsMadeTodayByLocation[office] = []
+  petitionsMadeTodayByLocation[channel] = []
   syncPetitionsList(robot)
 
 shoreUpPetitionsList = (robot) ->
@@ -102,26 +102,26 @@ syncPetitionsList = (robot) ->
   console.log("persiting petition list!!!")
   robot.brain.set("global.petitionsMadeTodayByLocation", petitionsMadeTodayByLocation)
   robot.brain.save()
-  petitionListIsDirty
+  petitionListIsDirty = false
   
 module.exports = (robot) ->
   robot.respond /i would like to join the (.*) congregation/i, (res) ->
-    office = res.match[1].trim()
+    channel = res.match[1].trim()
     user = res.message.user.name
-    makePetition(robot, res, office)
-    res.send("added " + user + "@" + office + " to daily petitions list");
+    makePetition(robot, res, channel)
+    res.send("added " + user + "@" + channel + " to daily petitions list");
   
   robot.respond /have i been faithful to the congregation of (.*)\?/i, (res) ->
-    office = res.match[1].trim()
+    channel = res.match[1].trim()
     user = res.message.user.name
     msg = "can"
-    msg = "cannot" if not canPetition(robot, res, office)
-    res.send(user + "@" + office + " " + msg + " petition again today")
+    msg = "cannot" if not canPetition(robot, res, channel)
+    res.send(user + "@" + channel + " " + msg + " petition again today")
     
   robot.respond /absolve the (.*) congregation of their sins/i, (res) ->
-    office = res.match[1].trim()
-    clearDailyPetitionsByOffice(robot, res, office)
-    res.send("Daily petitions list for @" + office + " has been cleared")
+    channel = res.match[1].trim()
+    clearDailyPetitionsBychannel(robot, res, channel)
+    res.send("Daily petitions list for @" + channel + " has been cleared")
   
   robot.respond /show me your faithful/, (res) ->
     res.send("```" + JSON.stringify(petitionsMadeTodayByLocation, null, "\t") + "```");
