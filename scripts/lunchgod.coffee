@@ -43,7 +43,8 @@ enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Co
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
 
 testList = ['Banditos', 'TK Wu', 'Broken Egg', 'Grizzly Peak', 'Blue Tractor']
-
+testPrays = {}
+testPrays[name] = 1 for name in testList
 maxBless = 10
 minBless = -10
 maxPray = 5
