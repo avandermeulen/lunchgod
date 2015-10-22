@@ -49,9 +49,10 @@ lunchMe = (robot, res, location, query) ->
       return weightedRandom(robot, res, data)
 
 weightedRandom = (robot, res, data) ->
-    index = Math.floor(Math.random() * data.total)
+    index = Math.floor(Math.random() * data.businesses.length)
     location = data.businesses[index].name
     url = data.businesses[index].url
+    console.log(JSON.stringify(data))
     if location
       blessing = robot.brain.get(location.toLowerCase()) || 0
       if ((blessing + maxBless)/range >= Math.random())
