@@ -106,26 +106,35 @@ syncPetitionsList = (robot) ->
   
 module.exports = (robot) ->
   robot.respond /i would like to join this congregation/i, (res) ->
-    channel = res.message.roo
+    waitASec
+    channel = res.message.room
     user = res.message.user.name
-    makePetition(robot, res)
-    res.send("added " + user + "@" + channel + " to daily petitions list");
+    didAnything = makePetition(robot, res)
+    if didAnything
+      res.send("welcome to my faithful, " + user + "@" + channel)
+    else
+      res.send("you are already part of my flock, my child " + user + "@" + channel);
   
   robot.respond /have i been faithful\?/i, (res) ->
+    waitASec
     channel = res.message.room
     user = res.message.user.name
-    msg = "can"
-    msg = "cannot" if not canPetition(robot, res)
-    res.send(user + "@" + channel + " " + msg + " petition again today")
+    can = canPetition(robot, res)
+    if (can)
+      res.send("yes, " + user + "@" + channel + ", my child, you walk in my aroma")
+    else
+      res.send("no, " + user + "@" + channel + ", i find your lack of faith is disturbing")
     
   robot.respond /absolve my congregation of their sins!/i, (res) ->
+    waitASec
     channel = res.message.room
     clearDailyPetitionsBychannel(robot, res)
-    res.send("Daily petitions list for @" + channel + " has been cleared")
+    res.send("@" + channel + " has been absolved of its lunch sins")
   
   robot.respond /show me your faithful/, (res) ->
+    waitASec
     shoreUpPetitionsList(robot)
-    res.send("```" + JSON.stringify(petitionsMadeTodayByLocation, null, "\t") + "```");
+    res.send("```" + JSON.stringify(petitionsMadeTodayByLocation, null, "\t") + "```")
   
   robot.respond /i pray for (.*) food/i, (res) ->
     foodType = res.match[1]
@@ -148,11 +157,6 @@ module.exports = (robot) ->
   robot.respond /dev.ping/, (res) ->
     waitASec
     res.send omniscience.ping()
-
-  robot.respond /dev.list (.*)/, (res) ->
-    waitASec
-    location = res.match[1]
-    res.send("```" + JSON.stringify(omniscience.list(location), null, "\t") + "```")
 
   robot.respond /bless (.*)/, (res) ->
     waitASec
@@ -230,6 +234,10 @@ module.exports = (robot) ->
     waitASec
     res.reply res.random leaveReplies
 
+sleep = (ms) ->
+  start = new Date().getTime()
+  continue while new Date().getTime() - start < ms
+  
 waitASec = () ->
   sleep(Math.floor(Math.random() * (1500 - 500)) + 500)
 
