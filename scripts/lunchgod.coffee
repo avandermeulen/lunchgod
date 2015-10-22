@@ -11,7 +11,7 @@ listenUrls = [
 
 maxBless = 10
 minBless = -10
-maxDenounceCount = 2
+maxDenounceCount = 3
 
 REST_TIME = parseInt(process.env.LUNCHGOD_REST_TIME)
 PRAYER_PROBABILITY = process.env.PRAYER_PROBABILITY
@@ -204,21 +204,25 @@ module.exports = (robot) ->
 
   robot.respond /bless (.*)/, (res) ->
     waitASec
-    target = res.match[1]
-    blessings = robot.brain.get(target.toLowerCase()) || 0
-    if blessings < maxBless
-      robot.brain.set(target.toLowerCase(), blessings + 1)
-      robot.brain.save()
-    res.send "Blessed art #{target}."
+    if canPetition(robot, res)
+      makePetition(robot, res)
+      target = res.match[1]
+      blessings = robot.brain.get(target.toLowerCase()) || 0
+      if blessings < maxBless
+        robot.brain.set(target.toLowerCase(), blessings + 1)
+        robot.brain.save()
+      res.send "Blessed art #{target}."
 
   robot.respond /curse (.*)/, (res) ->
     waitASec
-    target = res.match[1]
-    blessings = robot.brain.get(target.toLowerCase()) || 0
-    if blessings > minBless
-      robot.brain.set(target.toLowerCase(), blessings - 1)
-      robot.brain.save()
-    res.send "Cursed art #{target}."
+    if canPetition(robot, res)
+      makePetition(robot, res)
+      target = res.match[1]
+      blessings = robot.brain.get(target.toLowerCase()) || 0
+      if blessings > minBless
+        robot.brain.set(target.toLowerCase(), blessings - 1)
+        robot.brain.save()
+      res.send "Cursed art #{target}."
 
   robot.respond /how blessed art (.*)\?/, (res) ->
     waitASec
