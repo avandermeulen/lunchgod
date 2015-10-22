@@ -182,7 +182,7 @@ module.exports = (robot) ->
     channel = res.message.room
     user = res.message.user.name
     userList = robot.brain.get("prayers.#{channel}") || []
-    res.send "Prayers: " + JSON.stringify(userlist)
+    res.send "Prayers: " + JSON.stringify(userList)
 
   robot.respond /init/, (res) ->
     waitASec
