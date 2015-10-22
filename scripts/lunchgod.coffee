@@ -38,7 +38,7 @@ lunchMe = (robot, res, location, query) ->
 
   # Perform the search
   #msg.send("Looking for #{query} around #{location}...")
-  yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 20, location: location, (error, data) ->
+  yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 40, location: location, (error, data) ->
     if error != null
       return res.send "..."
 
@@ -50,11 +50,11 @@ lunchMe = (robot, res, location, query) ->
 
 weightedRandom = (robot, res, data) ->
     index = Math.floor(Math.random() * data.businesses.length)
-    location = data.businesses[index].name
+    location = data.businesses[index]
     if location
-      blessing = robot.brain.get(location.toLowerCase()) || 0
+      blessing = robot.brain.get(location.name.toLowerCase()) || 0
       if ((blessing + maxBless)/range >= Math.random())
-        return location
+        return "On this day, thou shalt go unto " + location.name + " and be fed. " + location.url
       else
         return weightedRandom(robot, res, data)
     else
