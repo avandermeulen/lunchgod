@@ -64,6 +64,7 @@ lunchMe = (msg, query, random = true) ->
 petitionsMadeTodayByLocation = {}
 
 makePetition = (office, user) ->
+  office = office.toUpperCase()
   petitions = petitionsMadeTodayByLocation[office]
   if not petitions
     petitions = []
@@ -71,9 +72,14 @@ makePetition = (office, user) ->
   petitions.push user
   
 canPetition = (office, user) ->
+  office = office.toUpperCase()
   petitions = petitionsMadeTodayByLocation[office] or []
   return user not in petitions
 
+clearDailyPetitionsByOffice = (office) ->
+  office = office.toUpperCase()
+  petitionsMadeTodayByLocation[office] = []
+  
 module.exports = (robot) ->
   robot.respond /dev makePetition (.*)/i, (res) ->
     office = res.match[1]
@@ -86,9 +92,13 @@ module.exports = (robot) ->
     user = res.message.user.name
     msg = "can"
     msg = "cannot" if not canPetition(office, user)
-    
     res.send(user + "@" + office + " " + msg + " petition again today")
-  
+    
+  robot.respond /dev clearDailyPetitionsByOffice (.*)/i, (res) ->
+    office = res.match[1]
+    clearDailyPetitionsByOffice(office)
+    robot.send("Daily petitions list for @" + office + " has been cleared")
+    
   robot.respond /i pray for (.*) food/i, (res) ->
     foodType = res.match[1]
     if (Math.random() < PRAYER_PROBABILITY)
