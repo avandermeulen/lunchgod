@@ -1,3 +1,5 @@
+
+
 enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me']
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
 
@@ -10,6 +12,8 @@ maxBless = 10
 minBless = -10
 maxPray = 5
 minPray = -5
+
+PRAYER_PROBABILITY = .05
 
 range = (maxBless - minBless) + (maxPray - minPray)
 
@@ -59,6 +63,15 @@ lunchMe = (msg, query, random = true) ->
 
 
 module.exports = (robot) ->
+  robot.respond /pray for (.*) food/i, (res) ->
+    foodType = res.match[1]
+    if (Math.random() < PRAYER_PROBABILITY)
+      robot.brain.set("prayers.food_type", foodType)
+      res.send("YOUR PRAYER HATH BEEN HEARD")
+    else
+      res.send("YOUR PRAYERS HATH GONE UNANSWERED")
+    
+    
   robot.respond /yelp me(.*)/i, (res) ->
     query = res.match[1]
     lunchMe res, query, false
