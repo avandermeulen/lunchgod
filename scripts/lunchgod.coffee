@@ -66,7 +66,7 @@ weightedRandom = (robot, res, data) ->
         history.shift()
         robot.brain.set(channelKey, history)
         robot.brain.save()
-        return "On this day, thou shalt go unto " + location.name + " and be fed. " + location.url
+        return "*On this day, thou shalt go unto " + location.name + " and be fed. *" + location.url
       else
         return weightedRandom(robot, res, data)
     else
@@ -232,7 +232,7 @@ module.exports = (robot) ->
       clearPetitions(robot, res)
       lunchMe(robot, res, location, "food")
     else
-      res.send "Where dost thou dwell?"
+      res.send "*Where dost thou dwell?*"
 
   robot.hear /.+ lunch[ ]?god/i, (res) ->
     waitASec
