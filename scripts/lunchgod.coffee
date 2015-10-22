@@ -97,8 +97,11 @@ module.exports = (robot) ->
   robot.respond /dev clearDailyPetitionsByOffice (.*)/i, (res) ->
     office = res.match[1]
     clearDailyPetitionsByOffice(office)
-    robot.send("Daily petitions list for @" + office + " has been cleared")
-    
+    res.send("Daily petitions list for @" + office + " has been cleared")
+  
+  robot.respond /dev printPetitionList/, (res) ->
+    res.send("```" + JSON.stringify(petitionsMadeTodayByLocation, null, "\t") + "```");
+  
   robot.respond /i pray for (.*) food/i, (res) ->
     foodType = res.match[1]
     if (Math.random() < PRAYER_PROBABILITY)
