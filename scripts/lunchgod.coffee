@@ -38,7 +38,7 @@ lunchMe = (robot, res, location, query) ->
 
   # Perform the search
   #msg.send("Looking for #{query} around #{location}...")
-  yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 80, location: location, (error, data) ->
+  yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 20, location: location, (error, data) ->
     if error != null
       return res.send "..."
 
