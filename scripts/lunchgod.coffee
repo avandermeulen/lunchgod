@@ -40,13 +40,13 @@ lunchMe = (robot, res, location, query) ->
   #msg.send("Looking for #{query} around #{location}...")
   yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 30, location: location, (error, data) ->
     if error != null
-      return res.send error
+      return error
 
     if data.total == 0
-      return res.send "...."
+      return "...."
 
     else
-      return res.send weightedRandom(robot, res, data)
+      return weightedRandom(robot, res, data)
 
 weightedRandom = (robot, res, data) ->
     index = Math.floor(Math.random() * data.businesses.length)
@@ -211,7 +211,7 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     location = robot.brain.get(channel.toLowerCase())
     if location
-      lunchMe(robot, res, location, "food")
+      res.send lunchMe(robot, res, location, "food")
     else
       res.send "Where dost thou dwell?"
 
