@@ -176,7 +176,7 @@ module.exports = (robot) ->
     channel = res.message.room
     channelDenounceKey = "#{channel}.denounceCount"
     if canPetition(robot, res)
-      res.send "*Thine dissent hast been noted.*"
+      res.send "*Thine dissent hath been noted.*"
       denounceCount = robot.brain.get(channelDenounceKey)
       makePetition(robot, res)
       denounceCount += 1
@@ -192,6 +192,13 @@ module.exports = (robot) ->
     channelKey = "#{channel}.history"
     history = robot.brain.get(channelKey) || []
     res.send JSON.stringify(history)
+
+  robot.respond /smite ([^ ]+)/i, (res) ->
+    if canPetition(robot, res)
+      makePetition(robot, res)
+      user = res.match[1]
+      makePetition(robot, res, )
+      res.send "I smite though @#{user}"
 
   robot.respond /init/, (res) ->
     waitASec
