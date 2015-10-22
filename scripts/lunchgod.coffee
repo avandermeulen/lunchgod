@@ -118,7 +118,7 @@ module.exports = (robot) ->
     waitASec
     location = res.match[2]
     channel = res.message.user.channel
-    res.reply res.toString()
+    res.reply "```" + JSON.stringify(res) + "```"
     #res.reply channel + ": " + location
 
   robot.respond /show us the way[!]?/, (res) ->
