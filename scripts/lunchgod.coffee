@@ -223,7 +223,7 @@ module.exports = (robot) ->
     res.send "I can not hear thou."
 
   robot.respond /SHOW US THE WAY!/, (res) ->
-    res.send res.random listenUrls
+    #res.send res.random listenUrls
     sleep(3000)
     user = res.message.user.name
     location = robot.brain.get("#" + channel.toLowerCase())
