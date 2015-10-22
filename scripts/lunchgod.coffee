@@ -147,7 +147,7 @@ module.exports = (robot) ->
     shoreUpPetitionsList(robot)
     res.send("```" + JSON.stringify(petitionsMadeTodayByLocation, null, "\t") + "```")
 
-  robot.respond /hear my prayer[.;:] i(?:(?:(?:(?:'m)|(?: am)) (?:(?:(?:(?:in the mood)|(?:hungry)) for)|(?:craving)))|(?: have a hankering for)) (.*)/i, (res) ->
+  robot.respond /hear my prayer[.;:] i(?:(?:(?:(?:'m)|(?: am)) (?:(?:(?:(?:in the mood)|(?:hungry)) for)|(?:craving)|(?:feeling)))|(?: have a hankering for)|(?: could go for)|(?: want)|(?: would (?:(?:like)|(?:prefer))))(?: some)? (.*)/i, (res) ->
     if canPetition(robot, res)
       makePetition(robot, res)
       foodType = res.match[1]
