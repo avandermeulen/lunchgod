@@ -8,7 +8,7 @@ listenUrls = [
   "http://newcsj.squarespace.com/storage/listen.png?__SQUARESPACE_CACHEVERSION=1427384743876",
   "http://sevenstorylearning.com/wp-content/uploads/2011/05/Listen-by-BRosen.jpg"
 ]
-testList = ['Banditos', 'TK Wu', 'Broken Egg', 'Grizzly Peak', 'Blue Tractor']
+
 testPrays = {}
 testPrays[name] = 1 for name in testList
 maxBless = 10
@@ -16,6 +16,8 @@ minBless = -10
 maxPray = 5
 minPray = -5
 maxDenounceCount = 2
+
+REST_TIME = process.env.LUNCHGOD_REST_TIME
 
 PRAYER_PROBABILITY = .05
 
@@ -170,7 +172,7 @@ module.exports = (robot) ->
     channel = res.message.room
     channelDenounceKey = "#{channel}.denounceCount"
     if canPetition(robot, res)
-      res.send "*Your blasphemy has been noted.*"
+      res.send "*Thine dissent hast been noted.*"
       denounceCount = robot.brain.get(channelDenounceKey)
       makePetition(robot, res)
       denounceCount += 1
@@ -252,12 +254,13 @@ module.exports = (robot) ->
     res.send "I can not hear thou."
 
   robot.respond /SHOW US THE WAY!/, (res) ->
-    res.send res.random listenUrls
+    #res.send res.random listenUrls
     sleep(1000)
     user = res.message.user.name
     channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
     if location
+      doWork(robot, res)
       clearDailyPetitionsByChannel(robot, res)
       clearPetitions(robot, res)
       lunchMe(robot, res, location, "food")
@@ -283,4 +286,9 @@ sleep = (ms) ->
 
 waitASec = () ->
   sleep(Math.floor(Math.random() * (1500 - 500)) + 500)
+
+doWork = (robot, res) ->
+  now = new Date().getTime()
+  res.send now
+
 
