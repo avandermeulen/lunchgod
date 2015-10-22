@@ -1,44 +1,3 @@
-###############################################################################
-##      OMNISCIENCE JS
-##
-`
-var omniscience = 
-{
-    "ping": function()
-    {
-        return "I AM AWAKE";
-    },
-    
-    "list": function(location)
-    {
-        // TODO
-        return [
-            {
-                "name": "tios"
-            },
-            
-            {
-                "name": "banditos"
-            },
-        
-            {
-                "name": "grizzly peak"
-            },
-            
-            {
-                "name": "broken egg"
-            }
-        ];
-    }
-};
-
-`
-##
-###############################################################################
-
-###############################################################################
-##      OMNIPOTENCE COFFESCRIPT
-##
 enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me']
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
 
@@ -111,6 +70,3 @@ module.exports = (robot) ->
     else
       return weightedRandom(list)
 
-
-##
-###############################################################################

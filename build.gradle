@@ -1,0 +1,45 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+configurations {
+    build
+}
+
+dependencies {
+    build files('scripts/lunchgod.coffee') {
+        builtBy 'build'
+    }
+}
+
+task clean << {
+    println('Cleaning up the carcass of the old Lunch God...')
+    delete('scripts/lunchgod.coffee')
+}
+
+task compileLunchGod(dependsOn: 'clean', type: Copy) {
+    // read the parts of the lunch god
+    def omniscience = new File('scripts/omniscience.js').text
+    def omnipotence = new File('scripts/omnipotence.coffee').text
+    
+    // inject them into any occurence of @omniscience@, or @omnipotence@ in
+    // any file with a name containing "_template"
+    from('scripts/') {
+        include '*_template.*'
+        rename '(.*)_template.(.*)', '$1.$2'
+        filter(ReplaceTokens, tokens: [ 'omniscience': omniscience, 'omnipotence': omnipotence ])
+    }
+    into 'scripts'
+}
+
+task build(dependsOn: [ files('scripts/lunchgod.coffee'), 'compileLunchGod' ] ) << {
+    // tell everyone what we're doing here
+    println('Creating the Lunch God...')
+}
+
+task deploy << {
+    println('Deploying the Lunch God to Heroku...')
+    exec {
+        executable 'git'
+        args 'push', 'heroku', 'master'
+    }
+}
+
