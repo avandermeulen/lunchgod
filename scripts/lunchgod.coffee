@@ -45,6 +45,8 @@ leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cas
 testList = ['Banditos', 'TK Wu', 'Broken Egg', 'Grizzly Peak', 'Blue Tractor']
 testPrays = {}
 testPrays[name] = 1 for name in testList
+robot.brain.set(prayrecord,testPrays)
+robot.brain.save()
 maxBless = 10
 minBless = -10
 maxPray = 5
