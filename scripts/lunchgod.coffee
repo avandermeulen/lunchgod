@@ -103,7 +103,7 @@ canPetition = (robot, res) ->
   petitions = petitionsMadeTodayByLocation[channel] or []
   return user not in petitions
 
-clearDailyPetitionsByChannel = (robot) ->
+clearDailyPetitionsByChannel = (robot, res) ->
   channel = res.message.room
   shoreUpPetitionsList(robot)
   petitionListIsDirty = true
