@@ -58,12 +58,18 @@ petitionsMadeTodayByLocation = {}
 makePetition = (robot, res, office) ->
   office = office.toUpperCase()
   user = res.message.user.name
+  
+  if not canPetition robot, res, office, user
+    return false
+    
   petitions = petitionsMadeTodayByLocation[office]
   if not petitions
     petitions = []
     petitionsMadeTodayByLocation[office] = petitions
+  
   petitions.push user
   syncPetitionsList(robot)
+  return true
   
 canPetition = (robot, res, office) ->
   office = office.toUpperCase()
@@ -77,6 +83,7 @@ clearDailyPetitionsByOffice = (robot, office) ->
   syncPetitionsList(robot)
 
 syncPetitionsList = (robot) ->
+  println("persiting petition list!!!")
   robot.brain.set("global.petitionsMadeTodayByLocation", petitionsMadeTodayByLocation)
   
 module.exports = (robot) ->
