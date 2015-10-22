@@ -167,7 +167,6 @@ module.exports = (robot) ->
     msg.send msg.random listenUrls
 
   robot.hear /denounce/i, (res) ->
-    blessing = robot.brain.get(location.name.toLowerCase()) || 0
     channel = res.message.room
     channelDenounceKey = "#{channel}.denounceCount"
     if canPetition(robot, res)
