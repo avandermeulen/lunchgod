@@ -254,7 +254,7 @@ module.exports = (robot) ->
     location = robot.brain.get("#" + channel.toLowerCase())
     if location
       doWork(robot, res)
-      clearDailyPetitionsByChannel(robot, res)
+      clearFaithfulByChannel(robot, res)
       clearPetitions(robot, res)
       lunchMe(robot, res, location, "food")
     else
