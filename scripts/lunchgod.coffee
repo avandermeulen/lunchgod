@@ -49,12 +49,13 @@ lunchMe = (robot, res, location, query) ->
       return weightedRandom(robot, res, data)
 
 weightedRandom = (robot, res, data) ->
-    index = Math.floor(Math.random() * data.businesses.length)
-    location = data.businesses[index]
+    index = Math.floor(Math.random() * data.total)
+    location = data.businesses[index].name
+    url = data.businesses[index].url
     if location
-      blessing = robot.brain.get(location.name.toLowerCase()) || 0
+      blessing = robot.brain.get(location.toLowerCase()) || 0
       if ((blessing + maxBless)/range >= Math.random())
-        return "On this day, thou shalt go unto " + location.name + " and be fed. " + location.url
+        return "On this day, thou shalt go unto " + location + " and be fed. " + url
       else
         return weightedRandom(robot, res, data)
     else
@@ -66,19 +67,19 @@ petitionListIsDirty = false
 makePetition = (robot, res) ->
   channel = res.message.room
   user = res.message.user.name
-  
+
   shoreUpPetitionsList(robot)
   petitionListIsDirty = true
-    
+
   petitions = petitionsMadeTodayByLocation[channel]
   if not petitions
     petitions = []
     petitionsMadeTodayByLocation[channel] = petitions
-  
+
   petitions.push user
   syncPetitionsList(robot)
   return true
-  
+
 canPetition = (robot, res) ->
   channel = res.message.room
   user = res.message.user.name
@@ -103,30 +104,30 @@ syncPetitionsList = (robot) ->
   robot.brain.set("global.petitionsMadeTodayByLocation", petitionsMadeTodayByLocation)
   robot.brain.save()
   petitionListIsDirty = false
-  
+
 module.exports = (robot) ->
   robot.respond /i would like to join the (.*) congregation/i, (res) ->
     channel = res.match[1].trim()
     user = res.message.user.name
     makePetition(robot, res)
     res.send("added " + user + "@" + channel + " to daily petitions list");
-  
+
   robot.respond /have i been faithful\?/i, (res) ->
     channel = res.message.room
     user = res.message.user.name
     msg = "can"
     msg = "cannot" if not canPetition(robot, res)
     res.send(user + "@" + channel + " " + msg + " petition again today")
-    
+
   robot.respond /absolve my congregation of their sins!/i, (res) ->
     channel = res.message.room
     clearDailyPetitionsBychannel(robot, res)
     res.send("Daily petitions list for @" + channel + " has been cleared")
-  
+
   robot.respond /show me your faithful/, (res) ->
     shoreUpPetitionsList(robot)
     res.send("```" + JSON.stringify(petitionsMadeTodayByLocation, null, "\t") + "```");
-  
+
   robot.respond /i pray for (.*) food/i, (res) ->
     foodType = res.match[1]
     if (Math.random() < PRAYER_PROBABILITY)
@@ -134,7 +135,7 @@ module.exports = (robot) ->
       res.reply "THOUST PRAYER HATH BEEN HEARD"
     else
       res.reply "THOUST PRAYERS HATH GONE UNANSWERED"
-  
+
   robot.respond /yelp me(.*)/i, (res) ->
     query = res.match[1]
     listenToGodImg res
