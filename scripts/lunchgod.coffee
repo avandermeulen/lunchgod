@@ -55,14 +55,14 @@ lunchMe = (robot, res, location, query) ->
 
 weightedRandom = (robot, res, data) ->
     index = Math.floor(Math.random() * data.total)
-    location = data.businesses[index].name
-    url = data.businesses[index].url
     if location
+      name = data.businesses[index].name
+      url = data.businesses[index].url
       blessing = robot.brain.get(location.toLowerCase()) || 0
-#      if ((blessing + maxBless)/range >= Math.random())
-      return "On this day, thou shalt go unto " + location + " and be fed. " + url
-#      else
-#        return weightedRandom(robot, res, data)ß
+      if ((blessing + maxBless)/range >= Math.random())
+        return "On this day, thou shalt go unto " + location + " and be fed. " + url
+      else
+        return weightedRandom(robot, res, data)
     else
       return "....."
 
