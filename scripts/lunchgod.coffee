@@ -85,7 +85,7 @@ getPetition = (robot, res, petitionType) ->
 setPetitionNoSave = (robot, res, petitionType, value) ->
   robot.brain.set(res.message.room + ".petitions." + petitionType, value)
 
-setPetition(robot, res, petitionType, value)
+setPetition = (robot, res, petitionType, value) ->
   setPetitionNoSave(robot, res, petitionType, value)
   robot.brain.save()
 
