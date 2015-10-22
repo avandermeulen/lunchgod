@@ -173,7 +173,7 @@ module.exports = (robot) ->
     if canPetition(robot, res)
       denounceCount = robot.brain.get(channelDenounceKey)
       makePetition(robot, res)
-      denounceCount ++
+      denounceCount += 1
       if denounceCount >= maxDenounceCount
         lunchMe(robot, res, location, "food")
       else
