@@ -57,7 +57,7 @@ weightedRandom = (robot, res, data) ->
     index = Math.floor(Math.random() * data.businesses.length)
     location = data.businesses[index]
     if location
-      blessing = robot.brain.get(location.toLowerCase()) || 0
+      blessing = robot.brain.get(location.name.toLowerCase()) || 0
       if ((blessing + maxBless)/range >= Math.random())
         return "On this day, thou shalt go unto " + location.name + " and be fed. " + location.url
       else
@@ -129,7 +129,7 @@ module.exports = (robot) ->
       res.send("yes, " + user + "@" + channel + ", my child, you walk in my aroma")
     else
       res.send("no, " + user + "@" + channel + ", i find your lack of faith is disturbing")
-    
+
   robot.respond /absolve my congregation of their sins!/i, (res) ->
     waitASec
     channel = res.message.room
@@ -242,7 +242,7 @@ module.exports = (robot) ->
 sleep = (ms) ->
   start = new Date().getTime()
   continue while new Date().getTime() - start < ms
-  
+
 waitASec = () ->
   sleep(Math.floor(Math.random() * (1500 - 500)) + 500)
 
