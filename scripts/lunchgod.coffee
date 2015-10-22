@@ -114,10 +114,10 @@ module.exports = (robot) ->
     else if blessings < 0
       res.reply "#{target} art cursed."
 
-  robot.respond /we dwell at (.*)/, (res) ->
+  robot.respond /we dwell (in|at) (.*)/, (res) ->
     waitASec
-    location = res.match[1]
-    channel = res.channel
+    location = res.match[2]
+    channel = res.message.channel
     res.reply channel + ": " + location
 
   robot.respond /show us the way[!]?/, (res) ->
@@ -135,12 +135,10 @@ module.exports = (robot) ->
 
   robot.enter (res) ->
     waitASec
-    name = res.message.user.name
     res.reply res.random enterReplies
 
   robot.leave (res) ->
     waitASec
-    name = res.message.user.name
     res.reply res.random leaveReplies
 
   weightedRandom = (list) ->
