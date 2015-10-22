@@ -95,25 +95,25 @@ module.exports = (robot) ->
   storedPetitionsList = robot.brain.get("global.petitionsMadeTodayByLocation")
   petitionsMadeTodayByLocation = storedPetitionsList if storedPetitionsList
 
-  robot.respond /dev makePetition (.*)/i, (res) ->
-    office = res.match[1]
+  robot.respond /i would like to join the (.*) congregation/i, (res) ->
+    office = res.match[1].trim()
     user = res.message.user.name
     makePetition(office, user)
     res.send("added " + user + "@" + office + " to daily petitions list");
   
-  robot.respond /dev canPetition (.*)/i, (res) ->
-    office = res.match[1]
+  robot.respond /have i been faithful to the congregation of (.*)?/i, (res) ->
+    office = res.match[1].trim()
     user = res.message.user.name
     msg = "can"
     msg = "cannot" if not canPetition(office, user)
     res.send(user + "@" + office + " " + msg + " petition again today")
     
-  robot.respond /dev clearDailyPetitionsByOffice (.*)/i, (res) ->
-    office = res.match[1]
+  robot.respond /absolve the (.*) congregation of their sins/i, (res) ->
+    office = res.match[1].trim()
     clearDailyPetitionsByOffice(office)
     res.send("Daily petitions list for @" + office + " has been cleared")
   
-  robot.respond /dev printPetitionList/, (res) ->
+  robot.respond /show me your faithful/, (res) ->
     res.send("```" + JSON.stringify(petitionsMadeTodayByLocation, null, "\t") + "```");
   
   robot.respond /i pray for (.*) food/i, (res) ->
