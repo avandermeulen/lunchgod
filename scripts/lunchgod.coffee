@@ -30,7 +30,7 @@ trim_re = /^\s+|\s+$|[\.!\?]+$/g
 yelp = require("yelp").createClient consumer_key: consumer_key, consumer_secret: consumer_secret, token: token, token_secret: token_secret
 
 
-lunchMe = (msg, location, query, random = true) ->
+lunchMe = (robot, res, location, query, random = true) ->
   # Clean up the query
   query = "food" if typeof query == "undefined"
   query = query.replace(trim_re, '')
@@ -39,7 +39,23 @@ lunchMe = (msg, location, query, random = true) ->
   # Perform the search
   #msg.send("Looking for #{query} around #{location}...")
   yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 20, location: location, (error, data) ->
-    return data
+    if error != null
+      return res.send "..."
+
+    if data.total == 0
+      return res.send "..."
+
+    else
+      return weightedRandom(robot, res, data)
+
+weightedRandom = (robot, res, data) ->
+    index = Math.floor(Math.random() * data.total)
+    location = data.business[index]
+    blessing = robot.brain.get(location.toLowerCase()) || 0
+    if ((blessing + maxBless)/range >= Math.random())
+      return location
+    else
+      return weightedRandom(robot, res, data)
 
 petitionsMadeTodayByLocation = {}
 
@@ -78,23 +94,23 @@ syncPetitionsList = (robot) ->
 module.exports = (robot) ->
   storedPetitionsList = robot.brain.get("global.petitionsMadeTodayByLocation")
   petitionsMadeTodayByLocation = storedPetitionsList if storedPetitionsList
-  
+
   robot.respond /dev makePetition (.*)/i, (res) ->
     office = res.match[1]
     user = res.message.user.name
-    makePetition(robot, res, office)
+    makePetition(office, user)
     res.send("added " + user + "@" + office + " to daily petitions list");
   
   robot.respond /dev canPetition (.*)/i, (res) ->
     office = res.match[1]
     user = res.message.user.name
     msg = "can"
-    msg = "cannot" if not canPetition(robot, res, office)
+    msg = "cannot" if not canPetition(office, user)
     res.send(user + "@" + office + " " + msg + " petition again today")
     
   robot.respond /dev clearDailyPetitionsByOffice (.*)/i, (res) ->
     office = res.match[1]
-    clearDailyPetitionsByOffice(robot, office)
+    clearDailyPetitionsByOffice(office)
     res.send("Daily petitions list for @" + office + " has been cleared")
   
   robot.respond /dev printPetitionList/, (res) ->
@@ -175,7 +191,6 @@ module.exports = (robot) ->
     robot.brain.set(channel.toLowerCase(), location)
     robot.brain.save()
     res.send "Henceforth My light shalt shine upon #{location}"
-    res.send "http://www.flowingfaith.com/wp-content/uploads/2013/04/Godshines.jpg"
 
   robot.respond /show us the way[!]?/, (res) ->
     waitASec
@@ -186,7 +201,7 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     location = robot.brain.get(channel.toLowerCase())
     if location
-      res.send weightedRandom(lunchMe(res, location, ""))
+      res.send lunchMe(robot, res, location)
     else
       res.send "Where dost thou dwell?"
 
@@ -202,15 +217,6 @@ module.exports = (robot) ->
   robot.leave (res) ->
     waitASec
     res.reply res.random leaveReplies
-
-  weightedRandom = (data) ->
-    index = Math.floor(Math.random() * data.total)
-    location = data.business[index]
-    blessing = robot.brain.get(location.toLowerCase()) || 0
-    if ((blessing + maxBless)/range >= Math.random())
-      return location
-    else
-      return weightedRandom(data)
 
 waitASec = () ->
   sleep(Math.floor(Math.random() * (1500 - 500)) + 500)
