@@ -2,7 +2,12 @@
 
 enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me']
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
-
+listenUrls = [
+  "http://barbwire.wpengine.netdna-cdn.com/wp-content/uploads/2015/01/hearinggod.jpg",
+  "http://www.stewardshipoflife.org/wordpress/wp-content/uploads/2011/01/3133347219_4c16658dd51-370x280.jpg",
+  "http://newcsj.squarespace.com/storage/listen.png?__SQUARESPACE_CACHEVERSION=1427384743876",
+  "http://sevenstorylearning.com/wp-content/uploads/2011/05/Listen-by-BRosen.jpg"
+]
 testList = ['Banditos', 'TK Wu', 'Broken Egg', 'Grizzly Peak', 'Blue Tractor']
 testPrays = {}
 testPrays[name] = 1 for name in testList
@@ -135,11 +140,11 @@ module.exports = (robot) ->
       res.reply "THOUST PRAYER HATH BEEN HEARD"
     else
       res.reply "THOUST PRAYERS HATH GONE UNANSWERED"
+  
+  robot.hear /I listen to you/i, (msg) ->
+    sleep(4000)
+    msg.send msg.random listenUrls
 
-  robot.respond /yelp me(.*)/i, (res) ->
-    query = res.match[1]
-    listenToGodImg res
-    #lunchMe res, query, false
   robot.respond /init/, (res) ->
     waitASec
     robot.brain.set('prayrecord',testPrays)
@@ -234,11 +239,3 @@ module.exports = (robot) ->
 waitASec = () ->
   sleep(Math.floor(Math.random() * (1500 - 500)) + 500)
 
-listenUrls = [
-  "http://barbwire.wpengine.netdna-cdn.com/wp-content/uploads/2015/01/hearinggod.jpg"
-  "http://www.stewardshipoflife.org/wordpress/wp-content/uploads/2011/01/3133347219_4c16658dd51-370x280.jpg"
-  "http://newcsj.squarespace.com/storage/listen.png?__SQUARESPACE_CACHEVERSION=1427384743876"
-  "http://sevenstorylearning.com/wp-content/uploads/2011/05/Listen-by-BRosen.jpg"
-]
-listenToGodImg = (msg) ->
-  return msg.random listenUrls
