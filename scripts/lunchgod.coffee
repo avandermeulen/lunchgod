@@ -289,7 +289,7 @@ doWork = (robot, res) ->
   channelKey = "#{channel}.lastRun"
   lastRun = robot.brain.get(channelKey) || 0
   res.send "now:#{now}, lastRun:#{lastRun}, REST_TIME:#{REST_TIME}"
-  if (lastRun + REST_TIME) > now
+  if lastRun + REST_TIME > now
     return false
   else
     robot.brain.set(channelKey, now)
