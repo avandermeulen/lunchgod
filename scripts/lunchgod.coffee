@@ -288,7 +288,6 @@ doWork = (robot, res) ->
   channel = res.message.room
   channelKey = "#{channel}.lastRun"
   lastRun = parseInt(robot.brain.get(channelKey)) || 0
-  res.send "now:#{now}, lastRun:#{lastRun}, REST_TIME:#{REST_TIME}"
   if lastRun + REST_TIME > now
     return false
   else
