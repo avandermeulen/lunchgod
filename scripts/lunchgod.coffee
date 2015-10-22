@@ -34,17 +34,11 @@ trim_re = /^\s+|\s+$|[\.!\?]+$/g
 yelp = require("yelp").createClient consumer_key: consumer_key, consumer_secret: consumer_secret, token: token, token_secret: token_secret
 
 
-lunchMe = (msg, query, random = true) ->
+lunchMe = (msg, location, query, random = true) ->
   # Clean up the query
   query = "food" if typeof query == "undefined"
   query = query.replace(trim_re, '')
   query = "food" if query == ""
-
-  # Extract a location from the query
-  split = query.split(/\snear\s/i)
-  query = split[0]
-  location = split[1]
-  location = start_address if (typeof location == "undefined" || location == "")
 
   # Perform the search
   #msg.send("Looking for #{query} around #{location}...")
@@ -187,7 +181,8 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     location = robot.brain.get(channel.toLowerCase())
     if location
-      res.send weightedRandom(testList)
+      res.send lunchMe(res, location, "")
+      #res.send weightedRandom(testList)
     else
       res.send "Where dost thou dwell?"
 
