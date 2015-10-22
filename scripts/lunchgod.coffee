@@ -40,7 +40,7 @@ lunchMe = (robot, res, location, query) ->
   #msg.send("Looking for #{query} around #{location}...")
   yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 30, location: location, (error, data) ->
     if error != null
-      return res.send "..."
+      return res.send error
 
     if data.total == 0
       return res.send "...."
@@ -211,7 +211,7 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     location = robot.brain.get(channel.toLowerCase())
     if location
-      res.send lunchMe(robot, res, location, "food")
+      lunchMe(robot, res, location, "food")
     else
       res.send "Where dost thou dwell?"
 
