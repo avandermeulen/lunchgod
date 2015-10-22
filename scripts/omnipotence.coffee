@@ -6,15 +6,20 @@ testList = ['Banditos', 'TK Wu', 'Broken Egg', 'Grizzly Peak', 'Blue Tractor']
 maxBless = 10
 minBless = -10
 
+
+
 module.exports = (robot) ->
   robot.respond /dev.ping/, (res) ->
+    waitASec
     res.send omniscience.ping()
   
   robot.respond /dev.list (.*)/, (res) ->
+    waitASec
     location = res.match[1]
     res.send("```" + JSON.stringify(omniscience.list(location), null, "\t") + "```")
     
   robot.respond /bless (.*)/, (res) ->
+    waitASec
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
     if blessings < maxBless
@@ -23,6 +28,7 @@ module.exports = (robot) ->
     res.send "Blessed art #{target}."
 
   robot.respond /curse (.*)/, (res) ->
+    waitASec
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
     if blessings > minBless
@@ -31,6 +37,7 @@ module.exports = (robot) ->
     res.send "Cursed art #{target}."
 
   robot.respond /how blessed art (.*)\?/, (res) ->
+    waitASec
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
     if blessings == 0
@@ -45,19 +52,25 @@ module.exports = (robot) ->
       res.send "#{target} art cursed."
   
   robot.respond /show us the way[!]?/, (res) ->
+    waitASec
     res.send "I can not hear thou."
 
   robot.respond /SHOW US THE WAY!/, (res) ->
+    waitASec
     res.send weightedRandom(testList)
 
   robot.hear /.+ lunch[ ]?god/i, (res) ->
+    waitASec
     name = res.message.user.name
     res.send "@#{name}: Thou shalt not take My Name in vain!"
 
   robot.enter (res) ->
+    waitASec
     name = res.message.user.name
     res.send "@#{name}: " + res.random enterReplies
+  
   robot.leave (res) ->
+    waitASec
     name = res.message.user.name
     res.send "@#{name}: " + res.random leaveReplies
 
@@ -69,4 +82,7 @@ module.exports = (robot) ->
       return location
     else
       return weightedRandom(list)
+
+waitASec = () ->
+  sleep(Math.floor(Math.random() * (1000 - 200)) + 200)
 
