@@ -52,26 +52,26 @@ lunchMe = (robot, res, location, query) ->
       return res.send weightedRandom(robot, res, data)
 
 weightedRandom = (robot, res, data) ->
-    index = Math.floor(Math.random() * data.businesses.length)
-    location = data.businesses[index]
-    if location
-      blessing = robot.brain.get(location.name.toLowerCase()) || 0
-      channel = res.message.room
-      channelHistoryKey = "#{channel}.history"
-      history = robot.brain.get(channelHistoryKey) || []
-      channelDenounceKey = "#{channel}.denounceCount"
-      if (location.is_closed == false && location.name not in history && (blessing + maxBless)/range >= Math.random())
-        history.push(location.name)
-        if history.length > 5
-          history.shift()
-        robot.brain.set(channelHistoryKey, history)
-        robot.brain.set(channelDenounceKey, 0)
-        robot.brain.save()
-        return "*On this day, thou shalt go unto " + location.name + " and be fed. *" + location.url
-      else
-        return weightedRandom(robot, res, data)
+  index = Math.floor(Math.random() * data.businesses.length)
+  location = data.businesses[index]
+  if location
+    blessing = robot.brain.get(location.name.toLowerCase()) || 0
+    channel = res.message.room
+    channelHistoryKey = "#{channel}.history"
+    history = robot.brain.get(channelHistoryKey) || []
+    channelDenounceKey = "#{channel}.denounceCount"
+    if (location.is_closed == false && location.name not in history && (blessing + maxBless)/range >= Math.random())
+      history.push(location.name)
+      if history.length > 5
+        history.shift()
+      robot.brain.set(channelHistoryKey, history)
+      robot.brain.set(channelDenounceKey, 0)
+      robot.brain.save()
+      return "*On this day, thou shalt go unto " + location.name + " and be fed. *" + location.url
     else
-      return "....."
+      return weightedRandom(robot, res, data)
+  else
+    return "....."
 
 todaysFaithful = {}
 faithfulLocked = false
