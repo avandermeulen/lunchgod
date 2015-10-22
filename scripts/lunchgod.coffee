@@ -17,7 +17,7 @@ maxPray = 5
 minPray = -5
 maxDenounceCount = 3
 
-PRAYER_PROBABILITY = .05
+PRAYER_PROBABILITY = process.env.PRAYER_PROBABILITY
 
 range = (maxBless - minBless) + (maxPray - minPray)
 
@@ -76,14 +76,17 @@ weightedRandom = (robot, res, data) ->
     else
       return "....."
 
-petitionsMadeTodayByLocation = {}
-petitionListIsDirty = false
+todaysFaithful = {}
+faithfulLocked = false
 
 getPetition = (robot, res, petitionType) ->
   return robot.brain.get(res.message.room + ".petitions." + petitionType)
 
-setPetition = (robot, res, petitionType, value) ->
+setPetitionNoSave = (robot, res, petitionType, value) ->
   robot.brain.set(res.message.room + ".petitions." + petitionType, value)
+
+setPetition(robot, res, petitionType, value)
+  setPetitionNoSave(robot, res, petitionType, value)
   robot.brain.save()
 
 makePetition = (robot, res) ->
@@ -93,48 +96,48 @@ makePetition = (robot, res) ->
   if not canPetition(robot, res)
     return false
 
-  shoreUpPetitionsList(robot)
-  petitionListIsDirty = true
+  shoreUpFaithful(robot)
+  faithfulLocked = true
 
-  petitions = petitionsMadeTodayByLocation[channel]
+  petitions = todaysFaithful[channel]
 
   if not petitions
     petitions = []
-    petitionsMadeTodayByLocation[channel] = petitions
+    todaysFaithful[channel] = petitions
 
   petitions.push user
-  syncPetitionsList(robot)
+  syncFaithful(robot)
   return true
 
 canPetition = (robot, res) ->
   channel = res.message.room
   user = res.message.user.name
-  shoreUpPetitionsList(robot)
-  petitions = petitionsMadeTodayByLocation[channel] or []
+  shoreUpFaithful(robot)
+  petitions = todaysFaithful[channel] or []
   return user not in petitions
 
-clearDailyPetitionsByChannel = (robot, res) ->
+clearFaithfulByChannel = (robot, res) ->
   channel = res.message.room
-  shoreUpPetitionsList(robot)
-  petitionListIsDirty = true
-  petitionsMadeTodayByLocation[channel] = []
-  syncPetitionsList(robot)
+  shoreUpFaithful(robot)
+  faithfulLocked = true
+  todaysFaithful[channel] = []
+  syncFaithful(robot)
   
-shoreUpPetitionsList = (robot) ->
-  storedPetitionsList = robot.brain.get("global.petitionsMadeTodayByLocation")
-  petitionsMadeTodayByLocation = storedPetitionsList if storedPetitionsList and not petitionListIsDirty
+shoreUpFaithful = (robot) ->
+  storedPetitionsList = robot.brain.get("global.todaysFaithful")
+  todaysFaithful = storedPetitionsList if storedPetitionsList and not faithfulLocked
 
-syncPetitionsList = (robot) ->
-  robot.brain.set("global.petitionsMadeTodayByLocation", petitionsMadeTodayByLocation)
+syncFaithful = (robot) ->
+  robot.brain.set("global.todaysFaithful", todaysFaithful)
   robot.brain.save()
-  petitionListIsDirty = false
+  faithfulLocked = false
 
 clearPetitions = (robot, res) ->
   channel = res.message.room
   robot.brain.set(channel + ".petitions.food_type", null)
   robot.brain.set(channel + ".petitions.distance_preference", null)
   robot.brain.save();
-  
+
 module.exports = (robot) ->
   robot.respond /who am i\?/i, (res) ->
     res.reply(res.message.user.name)
@@ -143,18 +146,20 @@ module.exports = (robot) ->
     res.reply(res.message.room)
 
   robot.respond /read my prayers back to me/i, (res) ->
-    channel = res.message.room
-    food_type = getPetition(robot, res, "food_type")
+    msg = ""
+    msg += (petitionType + ": " + getPetition(robot, res, petitionType) + "\n") for petitionType in PETITION_TYPES
+    res.send(msg.trim())
+    
   robot.respond /show me your faithful/, (res) ->
     waitASec
-    shoreUpPetitionsList(robot)
-    res.send("```" + JSON.stringify(petitionsMadeTodayByLocation, null, "\t") + "```")
+    shoreUpFaithful(robot)
+    res.send("```" + JSON.stringify(todaysFaithful, null, "\t") + "```")
 
   robot.respond /hear my prayer[.;:] i(?:(?:(?:(?:'m)|(?: am)) (?:(?:(?:(?:in the mood)|(?:hungry)) for)|(?:craving)|(?:feeling)))|(?: have a hankering for)|(?: could go for)|(?: want)|(?: would (?:(?:like)|(?:prefer))))(?: some)? (.*)/i, (res) ->
     if canPetition(robot, res)
       makePetition(robot, res)
       foodType = res.match[1]
-      if (Math.random() < PRAYER_PROBABILITY)
+      if (Math.random() <= PRAYER_PROBABILITY)
         robot.brain.set("prayers.food_type", foodType)
         res.reply "THOUST PRAYER HATH BEEN HEARD"
       else
@@ -257,7 +262,6 @@ module.exports = (robot) ->
     channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
     if location
-      clearDailyPetitionsByChannel(robot, res)
       clearPetitions(robot, res)
       lunchMe(robot, res, location, "food")
     else
