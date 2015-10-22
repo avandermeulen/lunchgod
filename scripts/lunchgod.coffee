@@ -111,7 +111,7 @@ module.exports = (robot) ->
     makePetition(robot, res, office)
     res.send("added " + user + "@" + office + " to daily petitions list");
   
-  robot.respond /have i been faithful to the congregation of (.*)?/i, (res) ->
+  robot.respond /have i been faithful to the congregation of (.*)\?/i, (res) ->
     office = res.match[1].trim()
     user = res.message.user.name
     msg = "can"
