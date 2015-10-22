@@ -130,6 +130,7 @@ module.exports = (robot) ->
   
   robot.respond /yelp me(.*)/i, (res) ->
     query = res.match[1]
+    listenToGod(res)
     lunchMe res, query, false
   robot.respond /init/, (res) ->
     waitASec
@@ -224,3 +225,12 @@ module.exports = (robot) ->
 
 waitASec = () ->
   sleep(Math.floor(Math.random() * (1500 - 500)) + 500)
+
+listenUrls = [
+  "http://barbwire.wpengine.netdna-cdn.com/wp-content/uploads/2015/01/hearinggod.jpg"
+  "http://www.stewardshipoflife.org/wordpress/wp-content/uploads/2011/01/3133347219_4c16658dd51-370x280.jpg"
+  "http://newcsj.squarespace.com/storage/listen.png?__SQUARESPACE_CACHEVERSION=1427384743876"
+  "http://sevenstorylearning.com/wp-content/uploads/2011/05/Listen-by-BRosen.jpg"
+]
+listenToGodImg (msg) ->
+  return msg.random listenUrls
