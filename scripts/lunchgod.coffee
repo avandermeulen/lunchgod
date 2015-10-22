@@ -197,8 +197,8 @@ module.exports = (robot) ->
     if canPetition(robot, res)
       makePetition(robot, res)
       user = res.match[1]
-      makePetition(robot, res, )
-      res.send "I smite though @#{user}"
+      makePetition(robot, res, user)
+      res.send "*I smite though @#{user}*"
 
   robot.respond /init/, (res) ->
     waitASec
