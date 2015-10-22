@@ -168,11 +168,12 @@ module.exports = (robot) ->
       res.reply "#{target} art cursed."
 
   robot.respond /we dwell (in|at) (.*)/, (res) ->
-    #waitASec
-    #location = res.match[2]
-    #channel = @client.getChannelGroupOrDMByID msg.channel
-    #res.reply channel
-    #res.reply channel + ": " + location
+    waitASec
+    location = res.match[2]
+    channel = "#" + res.message.room
+    robot.brain.set(channel.toLowerCase(), location)
+    robot.brain.save()
+    res.reply "Henceforth My light shalt shine upon #{location}"
 
   robot.respond /channel/, (res) ->
     waitASec
@@ -180,13 +181,18 @@ module.exports = (robot) ->
     res.reply "Channel: " + channel
     #res.reply channel + ": " + location
 
-  robot.respond /show us the way[!]?/, (res) ->
+  robot.respond /show us the way/i, (res) ->
     waitASec
     res.reply "I can not hear thou."
 
   robot.respond /SHOW US THE WAY!/, (res) ->
     waitASec
-    res.send weightedRandom(testList)
+    channel = "#" + res.message.room
+    location = robot.brain.get(channel.toLowerCase())
+    if location
+      res.send weightedRandom(testList)
+    else
+      res.reply "Where dost thou dwell?"
 
   robot.hear /.+ lunch[ ]?god/i, (res) ->
     waitASec
