@@ -57,6 +57,7 @@ weightedRandom = (robot, res, data) ->
     index = Math.floor(Math.random() * data.businesses.length)
     location = data.businesses[index]
     if location
+      console.log(JSON.stringify(location))
       blessing = robot.brain.get(location.name.toLowerCase()) || 0
       if ((blessing + maxBless)/range >= Math.random())
         return "On this day, thou shalt go unto " + location.name + " and be fed. " + location.url
