@@ -54,7 +54,7 @@ lunchMe = (robot, res, location, query) ->
       return res.send weightedRandom(robot, res, data)
 
 weightedRandom = (robot, res, data) ->
-    index = Math.floor(Math.random() * data.total)
+    index = Math.floor(Math.random() * data.businesses.length)
     location = data.businesses[index]
     if location
       blessing = robot.brain.get(location.toLowerCase()) || 0
