@@ -200,7 +200,7 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     location = robot.brain.get(channel.toLowerCase())
     if location
-      res.send weightedRandom(lunchMe(robot, res, location, ""))
+      res.send lunchMe(robot, res, location)
     else
       res.send "Where dost thou dwell?"
 
