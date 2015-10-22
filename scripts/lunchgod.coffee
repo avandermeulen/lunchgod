@@ -227,6 +227,7 @@ module.exports = (robot) ->
     res.send res.random listenUrls
     sleep(3000)
     user = res.message.user.name
+    channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
     if location
       clearDailyPetitionsByChannel(robot, res)
