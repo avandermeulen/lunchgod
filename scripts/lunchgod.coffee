@@ -90,30 +90,31 @@ clearDailyPetitionsByOffice = (robot, office) ->
   syncPetitionsList(robot)
 
 syncPetitionsList = (robot) ->
-  println("persiting petition list!!!")
+  console.log("persiting petition list!!!")
   robot.brain.set("global.petitionsMadeTodayByLocation", petitionsMadeTodayByLocation)
   robot.brain.save()
   
 module.exports = (robot) ->
+  console.log("attempting to load the god's master petition list");
   storedPetitionsList = robot.brain.get("global.petitionsMadeTodayByLocation")
   petitionsMadeTodayByLocation = storedPetitionsList if storedPetitionsList
 
   robot.respond /i would like to join the (.*) congregation/i, (res) ->
     office = res.match[1].trim()
     user = res.message.user.name
-    makePetition(office, user)
+    makePetition(robot, res, office)
     res.send("added " + user + "@" + office + " to daily petitions list");
   
   robot.respond /have i been faithful to the congregation of (.*)?/i, (res) ->
     office = res.match[1].trim()
     user = res.message.user.name
     msg = "can"
-    msg = "cannot" if not canPetition(office, user)
+    msg = "cannot" if not canPetition(robot, res, office)
     res.send(user + "@" + office + " " + msg + " petition again today")
     
   robot.respond /absolve the (.*) congregation of their sins/i, (res) ->
     office = res.match[1].trim()
-    clearDailyPetitionsByOffice(office)
+    clearDailyPetitionsByOffice(robot, res, office)
     res.send("Daily petitions list for @" + office + " has been cleared")
   
   robot.respond /show me your faithful/, (res) ->
