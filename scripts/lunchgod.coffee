@@ -72,7 +72,7 @@ makePetition = (office, user) ->
   
 canPetition = (office, user) ->
   petitions = petitionsMadeTodayByLocation[office] or []
-  return not user in petitions
+  return user not in petitions
 
 module.exports = (robot) ->
   robot.respond /dev makePetition (.*)/i, (res) ->
