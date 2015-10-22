@@ -146,7 +146,7 @@ module.exports = (robot) ->
   robot.respond /where am i\?/i, (res) ->
     res.reply(res.message.room)
 
-  robot.respond /read my prayers back to me/i, (res) ->
+  robot.respond /read (?:(?:my)|(?:our)) prayers back to (?:(?:me)|(?:us))/i, (res) ->
     msg = ""
     msg += (petitionType + ": " + getPetition(robot, res, petitionType) + "\n") for petitionType in PETITION_TYPES
     res.send(msg.trim())
@@ -156,18 +156,18 @@ module.exports = (robot) ->
     shoreUpFaithful(robot)
     res.send("```" + JSON.stringify(todaysFaithful, null, "\t") + "```")
 
-  robot.respond /hear +(?:(?:my)|(?:our)) +prayers?[.;:] +i(?:(?:(?:(?:'?m)|(?: +am)) +(?:(?:(?:(?:in +the +mood)|(?:hungry)) +for)|(?:craving)|(?:feeling)))|(?: +have +a +hankering +for)|(?: +could +go +for)|(?: +want)|(?: +would +(?:(?:like)|(?:prefer))))(?: +(?:(?:some)|(?:a)))? +(.+)/i, (res) ->
+  robot.respond /hear +(?:(?:my)|(?:our)) +prayers?[.,:!;]? +(?:(?:(?:(?:i +am)|(?:i'?m)|(?:we +are)|(?:we'?re)) +(?:(?:(?:(?:in +the +mood)|(?:hungry)) +for)|(?:craving)|(?:feeling)))|(?:(?:(?:i)|(?:we))(?: +have +a +hankering +for)|(?: +could +go +for)|(?: +want)|(?: +would +(?:(?:like)|(?:prefer))))|(?:(?:(?:i)|(?:we)) +feel +like))(?: +(?:(?:some)|(?:a)))? +(.+)/i, (res) ->
     waitASec
     if canPetition(robot, res)
       makePetition(robot, res)
       preference = res.match[1]
       if (Math.random() <= PRAYER_PROBABILITY)
         setPetition(robot, res, "preference", preference)
-        res.reply "*THOUST PRAYER HATH BEEN HEARD*"
+        res.reply "*Thoust prayers hath been heard*"
       else
-        res.reply "*THOUST PRAYERS HATH GONE UNANSWERED*"
+        res.reply "*Thoust prayers hath gone unanswered*"
     else
-      res.reply "*BEWARE GREED, MY CHILD*"
+      res.reply "*Beware my wrath, my child*"
   
   robot.hear /I listen to you/i, (msg) ->
     sleep(4000)
@@ -254,7 +254,7 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     robot.brain.set(channel.toLowerCase(), location)
     robot.brain.save()
-    res.send "*Henceforth My aroma shalt shine upon #{location}*"
+    res.send "*Henceforth My aroma shalt waft upon #{location}*"
 
   robot.respond /show us the way[!]?/, (res) ->
     waitASec
