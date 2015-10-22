@@ -76,6 +76,13 @@ weightedRandom = (robot, res, data) ->
 petitionsMadeTodayByLocation = {}
 petitionListIsDirty = false
 
+getPetition = (robot, res, petitionType)
+  return robot.brain.get(res.message.room + ".petitions." + petitionType)
+
+setPetition = (robot, res, petitionType, value) ->
+  robot.brain.set(res.message.room + ".petitions." + petitionType, value)
+  robot.brain.save()
+
 makePetition = (robot, res) ->
   channel = res.message.room
   user = res.message.user.name
@@ -132,12 +139,15 @@ module.exports = (robot) ->
   robot.respond /where am i\?/i, (res) ->
     res.reply(res.message.room)
 
+  robot.respond /read my prayers back to me/i, (res) ->
+    channel = res.message.room
+    food_type = getPetition(robot, res, "food_type")
   robot.respond /show me your faithful/, (res) ->
     waitASec
     shoreUpPetitionsList(robot)
     res.send("```" + JSON.stringify(petitionsMadeTodayByLocation, null, "\t") + "```")
 
-  robot.respond /i pray for (.*) food/i, (res) ->
+  robot.respond /hear my prayer[.;:] i(?:(?:(?:(?:'m)|(?: am)) (?:(?:(?:(?:in the mood)|(?:hungry)) for)|(?:craving)))|(?: have a hankering for)) (.*)/i, (res) ->
     if canPetition(robot, res)
       makePetition(robot, res)
       foodType = res.match[1]
