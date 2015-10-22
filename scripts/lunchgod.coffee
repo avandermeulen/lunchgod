@@ -62,7 +62,12 @@ module.exports = (robot) ->
   robot.respond /yelp me(.*)/i, (res) ->
     query = res.match[1]
     lunchMe res, query, false
-
+  robot.respond /init/, (res) ->
+    waitASec
+    robot.brain.set(prayrecord,testPrays)
+    robot.brain.save()
+    record = robot.brain.get(prayrecord)['Banditos']
+    res.reply "Banditos #{record}."
   robot.respond /dev.ping/, (res) ->
     waitASec
     res.send omniscience.ping()
