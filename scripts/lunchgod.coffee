@@ -169,6 +169,7 @@ module.exports = (robot) ->
     robot.brain.set(channel.toLowerCase(), location)
     robot.brain.save()
     res.send "Henceforth My light shalt shine upon #{location}"
+    res.send "http://www.flowingfaith.com/wp-content/uploads/2013/04/Godshines.jpg"
 
   robot.respond /show us the way[!]?/, (res) ->
     waitASec
