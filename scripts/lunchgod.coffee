@@ -136,7 +136,7 @@ module.exports = (robot) ->
   
   robot.respond /yelp me(.*)/i, (res) ->
     query = res.match[1]
-    listenToGod(res)
+    listenToGod res
     lunchMe res, query, false
   robot.respond /init/, (res) ->
     waitASec
@@ -238,5 +238,5 @@ listenUrls = [
   "http://newcsj.squarespace.com/storage/listen.png?__SQUARESPACE_CACHEVERSION=1427384743876"
   "http://sevenstorylearning.com/wp-content/uploads/2011/05/Listen-by-BRosen.jpg"
 ]
-listenToGodImg (msg) ->
+listenToGodImg = (msg) ->
   return msg.random listenUrls
