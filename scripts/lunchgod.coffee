@@ -61,8 +61,34 @@ lunchMe = (msg, query, random = true) ->
       business = data.businesses[0]
     msg.send("How about " + business.name + "? " + business.url)
 
+petitionsMadeTodayByLocation = {}
+
+makePetition = (office, user) ->
+  petitions = petitionsMadeTodayByLocation[office]
+  if not petitions
+    petitions = []
+    petitionsMadeTodayByLocation[office] = petitions
+  petitions.push user
+  
+canPetition = (office, user) ->
+  petitions = petitionsMadeTodayByLocation[office] or []
+  return user not in petitions
 
 module.exports = (robot) ->
+  robot.respond /dev makePetition (.*)/i, (res) ->
+    office = res.match[1]
+    user = res.message.user.name
+    makePetition(office, user)
+    res.send("added " + user + "@" + office + " to daily petitions list");
+  
+  robot.respond /dev canPetition (.*)/i, (res) ->
+    office = res.match[1]
+    user = res.message.user.name
+    msg = "can"
+    msg = "cannot" if not canPetition(office, user)
+    
+    res.send(user + "@" + office + " " + msg + " petition again today")
+  
   robot.respond /i pray for (.*) food/i, (res) ->
     foodType = res.match[1]
     if (Math.random() < PRAYER_PROBABILITY)
