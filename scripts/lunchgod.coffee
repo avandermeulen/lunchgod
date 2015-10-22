@@ -9,18 +9,14 @@ listenUrls = [
   "http://sevenstorylearning.com/wp-content/uploads/2011/05/Listen-by-BRosen.jpg"
 ]
 
-testPrays = {}
-testPrays[name] = 1 for name in testList
 maxBless = 10
 minBless = -10
-maxPray = 5
-minPray = -5
 maxDenounceCount = 2
 
 REST_TIME = process.env.LUNCHGOD_REST_TIME
 PRAYER_PROBABILITY = process.env.PRAYER_PROBABILITY
 
-range = (maxBless - minBless) + (maxPray - minPray)
+range = (maxBless - minBless)
 
 consumer_key = "QbaOtI4HhOIheBXDgL9Miw"
 consumer_secret = "cyVWY4CZJ-o9hPw3XuAxRQbe3YE"
@@ -211,15 +207,6 @@ module.exports = (robot) ->
       robot.brain.set(target.toLowerCase(), blessings + 1)
       robot.brain.save()
     res.send "Blessed art #{target}."
-
-  robot.respond /pray (.*)/, (res) ->
-    waitASec
-    target = res.match[1]
-    prays = robot.brain.get(target.toLowerCase()) || 0
-    if prays < maxPray
-      robot.brain.set(target.toLowerCase(), prays + 1)
-      robot.brain.save()
-    res.send "Prayed art #{target}."
 
   robot.respond /curse (.*)/, (res) ->
     waitASec
