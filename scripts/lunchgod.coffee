@@ -228,9 +228,9 @@ module.exports = (robot) ->
     user = res.message.user.name
     location = robot.brain.get("#" + channel.toLowerCase())
     if location
-      lunchMe(robot, res, location, "food")
       clearDailyPetitionsByChannel(robot, res)
       clearPetitions(robot, res)
+      lunchMe(robot, res, location, "food")
     else
       res.send "Where dost thou dwell?"
 
