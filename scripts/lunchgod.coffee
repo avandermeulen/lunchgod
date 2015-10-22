@@ -9,12 +9,13 @@ listenUrls = [
   "http://sevenstorylearning.com/wp-content/uploads/2011/05/Listen-by-BRosen.jpg"
 ]
 
-maxBless = 10
-minBless = -10
-maxDenounceCount = 3
+maxBless = process.env.BLESS_RANGE
+minBless = process.env.BLESS_RANGE * -1
+DENOUNCE_COUNT = process.env.DENOUNCE_COUNT
 
 REST_TIME = parseInt(process.env.LUNCHGOD_REST_TIME)
 PRAYER_PROBABILITY = process.env.PRAYER_PROBABILITY
+MAX_HISTORY = process.env.MAX_HISTORY
 
 range = (maxBless - minBless)
 
@@ -63,7 +64,7 @@ weightedRandom = (robot, res, data) ->
     channelDenounceKey = "#{channel}.denounceCount"
     if (location.is_closed == false && location.name not in history && (blessing + maxBless)/range >= Math.random())
       history.push(location.name)
-      if history.length > 5
+      if history.length > MAX_HISTORY
         history.shift()
       robot.brain.set(channelHistoryKey, history)
       robot.brain.set(channelDenounceKey, 0)
@@ -180,7 +181,7 @@ module.exports = (robot) ->
       denounceCount = robot.brain.get(channelDenounceKey)
       makePetition(robot, res)
       denounceCount += 1
-      if denounceCount >= maxDenounceCount
+      if denounceCount >= DENOUNCE_COUNT
         location = robot.brain.get("#" + channel.toLowerCase())
         lunchMe(robot, res, location, "food")
       else
@@ -261,12 +262,12 @@ module.exports = (robot) ->
 
   robot.respond /SHOW US THE WAY!/, (res) ->
     sleep(1000)
-    res.send "http://media.giphy.com/media/KJYUwoRXeQGxW/giphy.gif"
     user = res.message.user.name
     channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
     if location
       if doWork(robot, res)
+        res.send "http://media.giphy.com/media/KJYUwoRXeQGxW/giphy.gif"
         lunchMe(robot, res, location)
         clearFaithfulByChannel(robot, res)
         clearPetitions(robot, res)
