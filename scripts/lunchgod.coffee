@@ -136,7 +136,7 @@ module.exports = (robot) ->
   
   robot.respond /yelp me(.*)/i, (res) ->
     query = res.match[1]
-    listenToGod res
+    listenToGodImg res
     lunchMe res, query, false
   robot.respond /init/, (res) ->
     waitASec
