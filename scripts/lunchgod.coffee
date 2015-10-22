@@ -253,8 +253,8 @@ module.exports = (robot) ->
     res.send "*I can not hear thou.*"
 
   robot.respond /SHOW US THE WAY!/, (res) ->
-    #res.send res.random listenUrls
     sleep(1000)
+    res.send "http://media.giphy.com/media/KJYUwoRXeQGxW/giphy.gif"
     user = res.message.user.name
     channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
