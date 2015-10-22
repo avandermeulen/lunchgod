@@ -6,8 +6,6 @@ leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cas
 testList = ['Banditos', 'TK Wu', 'Broken Egg', 'Grizzly Peak', 'Blue Tractor']
 testPrays = {}
 testPrays[name] = 1 for name in testList
-#robot.brain.set(prayrecord,testPrays)
-#robot.brain.save()
 maxBless = 10
 minBless = -10
 maxPray = 5
@@ -34,17 +32,11 @@ trim_re = /^\s+|\s+$|[\.!\?]+$/g
 yelp = require("yelp").createClient consumer_key: consumer_key, consumer_secret: consumer_secret, token: token, token_secret: token_secret
 
 
-lunchMe = (msg, query, random = true) ->
+lunchMe = (msg, location, query, random = true) ->
   # Clean up the query
   query = "food" if typeof query == "undefined"
   query = query.replace(trim_re, '')
   query = "food" if query == ""
-
-  # Extract a location from the query
-  split = query.split(/\snear\s/i)
-  query = split[0]
-  location = split[1]
-  location = start_address if (typeof location == "undefined" || location == "")
 
   # Perform the search
   #msg.send("Looking for #{query} around #{location}...")
@@ -145,7 +137,7 @@ module.exports = (robot) ->
     if blessings < maxBless
       robot.brain.set(target.toLowerCase(), blessings + 1)
       robot.brain.save()
-    res.reply "Blessed art #{target}."
+    res.send "Blessed art #{target}."
 
   robot.respond /pray (.*)/, (res) ->
     waitASec
@@ -154,7 +146,7 @@ module.exports = (robot) ->
     if prays < maxPray
       robot.brain.set(target.toLowerCase(), prays + 1)
       robot.brain.save()
-    res.reply "Prayed art #{target}."
+    res.send "Prayed art #{target}."
 
   robot.respond /curse (.*)/, (res) ->
     waitASec
@@ -163,22 +155,22 @@ module.exports = (robot) ->
     if blessings > minBless
       robot.brain.set(target.toLowerCase(), blessings - 1)
       robot.brain.save()
-    res.reply "Cursed art #{target}."
+    res.send "Cursed art #{target}."
 
   robot.respond /how blessed art (.*)\?/, (res) ->
     waitASec
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
     if blessings == 0
-      res.reply "#{target} art profane."
+      res.send "#{target} art profane."
     else if blessings == maxBless
-      res.reply "#{target} art holy."
+      res.send "#{target} art holy."
     else if blessings == minBless
-      res.reply "#{target} art excommunicated."
+      res.send "#{target} art excommunicated."
     else if blessings > 0
-      res.reply "#{target} art blessed."
+      res.send "#{target} art blessed."
     else if blessings < 0
-      res.reply "#{target} art cursed."
+      res.send "#{target} art cursed."
 
   robot.respond /we dwell (in|at) (.*)/, (res) ->
     waitASec
@@ -186,26 +178,21 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     robot.brain.set(channel.toLowerCase(), location)
     robot.brain.save()
-    res.reply "Henceforth My light shalt shine upon #{location}"
-
-  robot.respond /channel/, (res) ->
-    waitASec
-    channel = res.message.room
-    res.reply "Channel: " + channel
-    #res.reply channel + ": " + location
+    res.send "Henceforth My light shalt shine upon #{location}"
 
   robot.respond /show us the way[!]?/, (res) ->
     waitASec
-    res.reply "I can not hear thou."
+    res.send "I can not hear thou."
 
   robot.respond /SHOW US THE WAY!/, (res) ->
     waitASec
     channel = "#" + res.message.room
     location = robot.brain.get(channel.toLowerCase())
     if location
-      res.send weightedRandom(testList)
+      res.send lunchMe(res, location, "")
+      #res.send weightedRandom(testList)
     else
-      res.reply "Where dost thou dwell?"
+      res.send "Where dost thou dwell?"
 
   robot.hear /.+ lunch[ ]?god/i, (res) ->
     waitASec
