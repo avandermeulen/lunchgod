@@ -227,7 +227,8 @@ module.exports = (robot) ->
     res.send "I can not hear thou."
 
   robot.respond /SHOW US THE WAY!/, (res) ->
-    waitASec
+    res.send res.random listenUrls
+    sleep(3000)
     channel = "#" + res.message.room
     location = robot.brain.get(channel.toLowerCase())
     if location
