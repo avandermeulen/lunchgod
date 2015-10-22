@@ -15,7 +15,7 @@ maxBless = 10
 minBless = -10
 maxPray = 5
 minPray = -5
-maxDenounceCount = 3
+maxDenounceCount = 2
 
 PRAYER_PROBABILITY = process.env.PRAYER_PROBABILITY
 
@@ -172,14 +172,15 @@ module.exports = (robot) ->
     msg.send msg.random listenUrls
 
   robot.hear /denounce/i, (res) ->
-    blessing = robot.brain.get(location.name.toLowerCase()) || 0
     channel = res.message.room
     channelDenounceKey = "#{channel}.denounceCount"
     if canPetition(robot, res)
+      res.send "*Your blasphemy has been noted.*"
       denounceCount = robot.brain.get(channelDenounceKey)
       makePetition(robot, res)
-      denounceCount ++
+      denounceCount += 1
       if denounceCount >= maxDenounceCount
+        location = robot.brain.get("#" + channel.toLowerCase())
         lunchMe(robot, res, location, "food")
       else
         robot.brain.set(channelDenounceKey, denounceCount)
