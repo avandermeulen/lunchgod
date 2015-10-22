@@ -106,8 +106,8 @@ syncPetitionsList = (robot) ->
   petitionListIsDirty = false
 
 module.exports = (robot) ->
-  robot.respond /i would like to join the (.*) congregation/i, (res) ->
-    channel = res.match[1].trim()
+  robot.respond /i would like to join this congregation/i, (res) ->
+    channel = res.message.roo
     user = res.message.user.name
     makePetition(robot, res)
     res.send("added " + user + "@" + channel + " to daily petitions list");
