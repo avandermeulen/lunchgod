@@ -30,7 +30,7 @@ trim_re = /^\s+|\s+$|[\.!\?]+$/g
 yelp = require("yelp").createClient consumer_key: consumer_key, consumer_secret: consumer_secret, token: token, token_secret: token_secret
 
 
-lunchMe = (robot, res, location, query, random = true) ->
+lunchMe = (robot, res, location, query) ->
   # Clean up the query
   query = "food" if typeof query == "undefined"
   query = query.replace(trim_re, '')
@@ -200,7 +200,7 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     location = robot.brain.get(channel.toLowerCase())
     if location
-      res.send lunchMe(robot, res, location)
+      res.send lunchMe(robot, res, location, "food")
     else
       res.send "Where dost thou dwell?"
 
