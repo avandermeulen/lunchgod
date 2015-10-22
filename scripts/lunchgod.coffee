@@ -57,9 +57,15 @@ weightedRandom = (robot, res, data) ->
     index = Math.floor(Math.random() * data.businesses.length)
     location = data.businesses[index]
     if location
-      console.log(JSON.stringify(location))
       blessing = robot.brain.get(location.name.toLowerCase()) || 0
-      if (location.is_closed == false && (blessing + maxBless)/range >= Math.random())
+      channel = res.message.room
+      channelKey = "#{channel}.history"
+      history = robot.brain.get(channelKey) || []
+      if (location.is_closed == false && location.name not in history && (blessing + maxBless)/range >= Math.random())
+        history.push(location.name)
+        history.shift()
+        robot.brain.set(channelKey, history)
+        robot.brain.save()
         return "On this day, thou shalt go unto " + location.name + " and be fed. " + location.url
       else
         return weightedRandom(robot, res, data)
@@ -168,21 +174,11 @@ module.exports = (robot) ->
     sleep(4000)
     msg.send msg.random listenUrls
 
-  robot.hear /pray/i, (res) ->
-    waitASec()
+  robot.respond /show me the history/i, (res) ->
     channel = res.message.room
-    user = res.message.user.name
-    userList = robot.brain.get("prayers.#{channel}") || []
-    userList.push(user)
-    robot.brain.set("prayers.#{channel}", userList)
-    robot.brain.save()
-
-  robot.hear /who prayed\?/i, (res) ->
-    waitASec()
-    channel = res.message.room
-    user = res.message.user.name
-    userList = robot.brain.get("prayers.#{channel}") || []
-    res.send "Prayers: " + JSON.stringify(userList)
+    channelKey = "#{channel}.history"
+    history = robot.brain.get(channelKey) || []
+    res.send JSON.stringify(history)
 
   robot.respond /init/, (res) ->
     waitASec
@@ -251,8 +247,8 @@ module.exports = (robot) ->
   robot.respond /SHOW US THE WAY!/, (res) ->
     res.send res.random listenUrls
     sleep(3000)
-    channel = "#" + res.message.room
-    location = robot.brain.get(channel.toLowerCase())
+    user = res.message.user.name
+    location = robot.brain.get("#" + channel.toLowerCase())
     if location
       lunchMe(robot, res, location, "food")
     else
