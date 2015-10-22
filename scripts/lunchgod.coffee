@@ -132,10 +132,16 @@ module.exports = (robot) ->
       res.reply "#{target} art cursed."
 
   robot.respond /we dwell (in|at) (.*)/, (res) ->
+    #waitASec
+    #location = res.match[2]
+    #channel = @client.getChannelGroupOrDMByID msg.channel
+    #res.reply channel
+    #res.reply channel + ": " + location
+
+  robot.respond /channel/, (res) ->
     waitASec
-    location = res.match[2]
-    channel = res.message.user.channel
-    res.reply "```" + JSON.stringify(res) + "```"
+    channel = @client.getChannelGroupOrDMByID msg.channel
+    res.reply channel
     #res.reply channel + ": " + location
 
   robot.respond /show us the way[!]?/, (res) ->
