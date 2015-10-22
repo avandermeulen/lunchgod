@@ -141,7 +141,7 @@ module.exports = (robot) ->
   robot.respond /channel/, (res) ->
     waitASec
     channel = @client.getChannelGroupOrDMByID msg.channel
-    res.reply channel
+    res.reply "Channel: " + channel
     #res.reply channel + ": " + location
 
   robot.respond /show us the way[!]?/, (res) ->
