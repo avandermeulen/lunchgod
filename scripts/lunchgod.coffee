@@ -154,7 +154,7 @@ module.exports = (robot) ->
     shoreUpFaithful(robot)
     res.send("```" + JSON.stringify(todaysFaithful, null, "\t") + "```")
 
-  robot.respond /hear +(?:(?:my)|(?:our)) +prayers?[.;:] +i(?:(?:(?:(?:'?m)|(?: +am)) +(?:(?:(?:(?:in +the +mood)|(?:hungry)) +for)|(?:craving)|(?:feeling)))|(?: +have +a +hankering +for)|(?: +could +go +for)|(?: +want)|(?: +would +(?:(?:like)|(?:prefer))))(?: +some)? +([^\s]+$)/i, (res) ->
+  robot.respond /hear +(?:(?:my)|(?:our)) +prayers?[.;:] +i(?:(?:(?:(?:'?m)|(?: +am)) +(?:(?:(?:(?:in +the +mood)|(?:hungry)) +for)|(?:craving)|(?:feeling)))|(?: +have +a +hankering +for)|(?: +could +go +for)|(?: +want)|(?: +would +(?:(?:like)|(?:prefer))))(?: +(?:(?:some)|(?:a)))? +([^\s]+$)/i, (res) ->
     waitASec
     if canPetition(robot, res)
       makePetition(robot, res)
