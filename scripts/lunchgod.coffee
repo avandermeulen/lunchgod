@@ -235,7 +235,7 @@ module.exports = (robot) ->
 
   robot.respond /SHOW US THE WAY!/, (res) ->
     #res.send res.random listenUrls
-    sleep(3000)
+    sleep(1000)
     user = res.message.user.name
     channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
