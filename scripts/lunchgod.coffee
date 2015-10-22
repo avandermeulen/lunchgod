@@ -164,7 +164,7 @@ module.exports = (robot) ->
         setPetition(robot, res, "preference", preference)
         res.reply "*THOUST PRAYER HATH BEEN HEARD*"
       else
-        res.reply "THOUST PRAYERS HATH GONE UNANSWERED"
+        res.reply "*THOUST PRAYERS HATH GONE UNANSWERED*"
     else
       res.reply "*BEWARE GREED, MY CHILD*"
   
@@ -212,7 +212,7 @@ module.exports = (robot) ->
       if blessings < maxBless
         robot.brain.set(target.toLowerCase(), blessings + 1)
         robot.brain.save()
-      res.send "Blessed art #{target}."
+      res.send "*Blessed art #{target}.*"
 
   robot.respond /curse (.*)/, (res) ->
     waitASec
@@ -223,22 +223,22 @@ module.exports = (robot) ->
       if blessings > minBless
         robot.brain.set(target.toLowerCase(), blessings - 1)
         robot.brain.save()
-      res.send "Cursed art #{target}."
+      res.send "*Cursed art #{target}.*"
 
   robot.respond /how blessed art (.*)\?/, (res) ->
     waitASec
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
     if blessings == 0
-      res.send "#{target} art profane."
+      res.send "*#{target} art profane.*"
     else if blessings == maxBless
-      res.send "#{target} art holy."
+      res.send "*#{target} art holy.*"
     else if blessings == minBless
-      res.send "#{target} art excommunicated."
+      res.send "*#{target} art excommunicated.*"
     else if blessings > 0
-      res.send "#{target} art blessed."
+      res.send "*#{target} art blessed.*"
     else if blessings < 0
-      res.send "#{target} art cursed."
+      res.send "*#{target} art cursed.*"
 
   robot.respond /we dwell (in|at) (.*)/, (res) ->
     waitASec
@@ -246,11 +246,11 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     robot.brain.set(channel.toLowerCase(), location)
     robot.brain.save()
-    res.send "Henceforth My light shalt shine upon #{location}"
+    res.send "*Henceforth My light shalt shine upon #{location}*"
 
   robot.respond /show us the way[!]?/, (res) ->
     waitASec
-    res.send "I can not hear thou."
+    res.send "*I can not hear thou.*"
 
   robot.respond /SHOW US THE WAY!/, (res) ->
     #res.send res.random listenUrls
@@ -271,7 +271,7 @@ module.exports = (robot) ->
   robot.hear /.+ lunch[ ]?god/i, (res) ->
     waitASec
     name = res.message.user.name
-    res.reply "Thou shalt not take My Name in vain!"
+    res.reply "*Thou shalt not take My Name in vain!*"
 
   robot.enter (res) ->
     waitASec
