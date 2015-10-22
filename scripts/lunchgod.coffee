@@ -155,16 +155,17 @@ module.exports = (robot) ->
     res.send("```" + JSON.stringify(todaysFaithful, null, "\t") + "```")
 
   robot.respond /hear +my +prayer[.;:] +i(?:(?:(?:(?:'m)|(?: +am)) +(?:(?:(?:(?:in +the +mood)|(?:hungry)) +for)|(?:craving)|(?:feeling)))|(?: +have +a +hankering +for)|(?: +could +go +for)|(?: +want)|(?: +would +(?:(?:like)|(?:prefer))))(?: +some)? +([^\s]+$)/i, (res) ->
+    waitASec
     if canPetition(robot, res)
       makePetition(robot, res)
       foodType = res.match[1]
       if (Math.random() <= PRAYER_PROBABILITY)
         robot.brain.set("prayers.food_type", foodType)
-        res.reply "THOUST PRAYER HATH BEEN HEARD"
+        res.reply "*THOUST PRAYER HATH BEEN HEARD*"
       else
         res.reply "THOUST PRAYERS HATH GONE UNANSWERED"
     else
-      res.reply "BEWARE GREED, MY CHILD"
+      res.reply "*BEWARE GREED, MY CHILD*"
   
   robot.hear /I listen to you/i, (msg) ->
     sleep(4000)
