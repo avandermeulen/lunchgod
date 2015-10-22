@@ -60,7 +60,7 @@ weightedRandom = (robot, res, data) ->
       console.log(JSON.stringify(location))
       blessing = robot.brain.get(location.name.toLowerCase()) || 0
       if (location.is_closed == false && (blessing + maxBless)/range >= Math.random())
-        return "On this day, thou shalt go unto " + location.name + " and be fed. " + location.url
+        return "*On this day, thou shalt go unto " + location.name + " and be fed. *" + location.url
       else
         return weightedRandom(robot, res, data)
     else
@@ -256,7 +256,7 @@ module.exports = (robot) ->
     if location
       lunchMe(robot, res, location, "food")
     else
-      res.send "Where dost thou dwell?"
+      res.send "*Where dost thou dwell?*"
 
   robot.hear /.+ lunch[ ]?god/i, (res) ->
     waitASec
