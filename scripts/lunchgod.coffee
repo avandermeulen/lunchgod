@@ -30,7 +30,7 @@ trim_re = /^\s+|\s+$|[\.!\?]+$/g
 yelp = require("yelp").createClient consumer_key: consumer_key, consumer_secret: consumer_secret, token: token, token_secret: token_secret
 
 
-lunchMe = (robot, res, location, query, random = true) ->
+lunchMe = (robot, res, location, query) ->
   # Clean up the query
   query = "food" if typeof query == "undefined"
   query = query.replace(trim_re, '')
@@ -50,7 +50,7 @@ lunchMe = (robot, res, location, query, random = true) ->
 
 weightedRandom = (robot, res, data) ->
     index = Math.floor(Math.random() * data.total)
-    location = data.business[index]
+    location = data.businesses[index]
     blessing = robot.brain.get(location.toLowerCase()) || 0
     if ((blessing + maxBless)/range >= Math.random())
       return location
@@ -201,7 +201,7 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     location = robot.brain.get(channel.toLowerCase())
     if location
-      res.send lunchMe(robot, res, location)
+      res.send lunchMe(robot, res, location, "food")
     else
       res.send "Where dost thou dwell?"
 
