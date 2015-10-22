@@ -84,7 +84,7 @@ module.exports = (robot) ->
     if blessings == 0
       res.send "#{target} art neutral."
     else if blessings == maxBless
-      res.send "#{target} art divine."
+      res.send "#{target} art holy."
     else if blessings == minBless
       res.send "#{target} art excommunicated."
     else if blessings > 0
