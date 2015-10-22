@@ -22,9 +22,5 @@
   },
   "engines": {
     "node": "0.10.x"
-  },
-  
-  "scripts": {
-    "learn": "node src/yelpfetch.js"
   }
 }

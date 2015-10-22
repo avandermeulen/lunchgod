@@ -1,44 +1,3 @@
-###############################################################################
-##      OMNISCIENCE JS
-##
-`
-var omniscience =
-{
-    "ping": function()
-    {
-        return "I AM AWAKE";
-    },
-
-    "list": function(location)
-    {
-        // TODO
-        return [
-            {
-                "name": "tios"
-            },
-
-            {
-                "name": "banditos"
-            },
-
-            {
-                "name": "grizzly peak"
-            },
-
-            {
-                "name": "broken egg"
-            }
-        ];
-    }
-};
-
-`
-##
-###############################################################################
-
-###############################################################################
-##      OMNIPOTENCE COFFESCRIPT
-##
 enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me']
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
 
@@ -51,6 +10,8 @@ maxBless = 10
 minBless = -10
 maxPray = 5
 minPray = -5
+
+range = (maxBless - minBless) + (maxPray - minPray)
 
 consumer_key = "QbaOtI4HhOIheBXDgL9Miw"
 consumer_secret = "cyVWY4CZJ-o9hPw3XuAxRQbe3YE"
@@ -143,7 +104,7 @@ module.exports = (robot) ->
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
     if blessings == 0
-      res.send "#{target} art neutral."
+      res.send "#{target} art profane."
     else if blessings == maxBless
       res.send "#{target} art holy."
     else if blessings == minBless
@@ -180,14 +141,10 @@ module.exports = (robot) ->
     index = Math.floor(Math.random() * list.length)
     location = list[index]
     blessing = robot.brain.get(location.toLowerCase()) || 0
-    if ((blessing + 10)/20 >= Math.random())
+    if ((blessing + maxBless)/range >= Math.random())
       return location
     else
       return weightedRandom(list)
 
 waitASec = () ->
   sleep(Math.floor(Math.random() * (1000 - 200)) + 200)
-
-
-##
-###############################################################################
