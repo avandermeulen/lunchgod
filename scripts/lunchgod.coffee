@@ -63,15 +63,14 @@ lunchMe = (msg, query, random = true) ->
 
 
 module.exports = (robot) ->
-  robot.respond /pray for (.*) food/i, (res) ->
+  robot.respond /i pray for (.*) food/i, (res) ->
     foodType = res.match[1]
     if (Math.random() < PRAYER_PROBABILITY)
       robot.brain.set("prayers.food_type", foodType)
-      res.send("YOUR PRAYER HATH BEEN HEARD")
+      res.reply "THOUST PRAYER HATH BEEN HEARD"
     else
-      res.send("YOUR PRAYERS HATH GONE UNANSWERED")
-    
-    
+      res.reply "THOUST PRAYERS HATH GONE UNANSWERED"
+  
   robot.respond /yelp me(.*)/i, (res) ->
     query = res.match[1]
     lunchMe res, query, false
