@@ -280,6 +280,6 @@ waitASec = () ->
 
 doWork = (robot, res) ->
   now = new Date().getTime()
-  res.send now
+  res.send "time: " + now
 
 
