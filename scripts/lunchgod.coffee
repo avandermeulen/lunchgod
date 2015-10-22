@@ -57,9 +57,15 @@ weightedRandom = (robot, res, data) ->
     index = Math.floor(Math.random() * data.businesses.length)
     location = data.businesses[index]
     if location
-      console.log(JSON.stringify(location))
       blessing = robot.brain.get(location.name.toLowerCase()) || 0
-      if (location.is_closed == false && (blessing + maxBless)/range >= Math.random())
+      channel = res.message.room
+      channelKey = "#{channel}.history"
+      history = robot.brain.get(channelKey) || []
+      if (location.is_closed == false && location.name not in history && (blessing + maxBless)/range >= Math.random())
+        history.push(location.name)
+        history.shift()
+        robot.brain.set(channelKey, history)
+        robot.brain.save()
         return "*On this day, thou shalt go unto " + location.name + " and be fed. *" + location.url
       else
         return weightedRandom(robot, res, data)
@@ -72,9 +78,7 @@ petitionListIsDirty = false
 makePetition = (robot, res) ->
   channel = res.message.room
   user = res.message.user.name
-  console.log("@@@ channel: " + channel)
-  console.log("@@@ user:    " + user)
-
+  
   if not canPetition(robot, res)
     return false
 
@@ -82,10 +86,8 @@ makePetition = (robot, res) ->
   petitionListIsDirty = true
 
   petitions = petitionsMadeTodayByLocation[channel]
-  console.log("@@@ petitions:\n" + JSON.stringify(petitions, undefined, "\t"));
 
   if not petitions
-    console.log("@@@ creating new channel in petitions list");
     petitions = []
     petitionsMadeTodayByLocation[channel] = petitions
 
@@ -100,56 +102,34 @@ canPetition = (robot, res) ->
   petitions = petitionsMadeTodayByLocation[channel] or []
   return user not in petitions
 
-clearDailyPetitionsBychannel = (robot) ->
+clearDailyPetitionsByChannel = (robot) ->
   channel = res.message.room
   shoreUpPetitionsList(robot)
   petitionListIsDirty = true
   petitionsMadeTodayByLocation[channel] = []
   syncPetitionsList(robot)
-
+  
 shoreUpPetitionsList = (robot) ->
-  console.log("attempting to load the god's master petition list");
   storedPetitionsList = robot.brain.get("global.petitionsMadeTodayByLocation")
   petitionsMadeTodayByLocation = storedPetitionsList if storedPetitionsList and not petitionListIsDirty
 
 syncPetitionsList = (robot) ->
-  console.log("persiting petition list!!!")
   robot.brain.set("global.petitionsMadeTodayByLocation", petitionsMadeTodayByLocation)
   robot.brain.save()
   petitionListIsDirty = false
 
+clearPetitions = (robot, res) ->
+  channel = res.message.room
+  robot.brain.set(channel + ".petitions.food_type", null)
+  robot.brain.set(channel + ".petitions.distance_preference", null)
+  robot.brain.save();
+  
 module.exports = (robot) ->
   robot.respond /who am i\?/i, (res) ->
     res.reply(res.message.user.name)
   
   robot.respond /where am i\?/i, (res) ->
     res.reply(res.message.room)
-    
-  robot.respond /i would like to join this congregation/i, (res) ->
-    waitASec
-    channel = res.message.room
-    user = res.message.user.name
-    didAnything = makePetition(robot, res)
-    if didAnything
-      res.send("welcome to my faithful, " + user + "@" + channel)
-    else
-      res.send("you are already part of my flock, my child " + user + "@" + channel);
-
-  robot.respond /have i been faithful\?/i, (res) ->
-    waitASec
-    channel = res.message.room
-    user = res.message.user.name
-    can = canPetition(robot, res)
-    if (not can)
-      res.send("yes, " + user + "@" + channel + ", my child, you walk in my aroma")
-    else
-      res.send("no, " + user + "@" + channel + ", i find your lack of faith is disturbing")
-
-  robot.respond /absolve my congregation of their sins!/i, (res) ->
-    waitASec
-    channel = res.message.room
-    clearDailyPetitionsBychannel(robot, res)
-    res.send("@" + channel + " has been absolved of its lunch sins")
 
   robot.respond /show me your faithful/, (res) ->
     waitASec
@@ -157,32 +137,26 @@ module.exports = (robot) ->
     res.send("```" + JSON.stringify(petitionsMadeTodayByLocation, null, "\t") + "```")
 
   robot.respond /i pray for (.*) food/i, (res) ->
-    foodType = res.match[1]
-    if (Math.random() < PRAYER_PROBABILITY)
-      robot.brain.set("prayers.food_type", foodType)
-      res.reply "THOUST PRAYER HATH BEEN HEARD"
+    if canPetition(robot, res)
+      makePetition(robot, res)
+      foodType = res.match[1]
+      if (Math.random() < PRAYER_PROBABILITY)
+        robot.brain.set("prayers.food_type", foodType)
+        res.reply "THOUST PRAYER HATH BEEN HEARD"
+      else
+        res.reply "THOUST PRAYERS HATH GONE UNANSWERED"
     else
-      res.reply "THOUST PRAYERS HATH GONE UNANSWERED"
-
+      res.reply "BEWARE GREED, MY CHILD"
+  
   robot.hear /I listen to you/i, (msg) ->
     sleep(4000)
     msg.send msg.random listenUrls
 
-  robot.hear /pray/i, (res) ->
-    waitASec()
+  robot.respond /show me the history/i, (res) ->
     channel = res.message.room
-    user = res.message.user.name
-    userList = robot.brain.get("prayers.#{channel}") || []
-    userList.push(user)
-    robot.brain.set("prayers.#{channel}", userList)
-    robot.brain.save()
-
-  robot.hear /who prayed\?/i, (res) ->
-    waitASec()
-    channel = res.message.room
-    user = res.message.user.name
-    userList = robot.brain.get("prayers.#{channel}") || []
-    res.send "Prayers: " + JSON.stringify(userList)
+    channelKey = "#{channel}.history"
+    history = robot.brain.get(channelKey) || []
+    res.send JSON.stringify(history)
 
   robot.respond /init/, (res) ->
     waitASec
@@ -251,10 +225,12 @@ module.exports = (robot) ->
   robot.respond /SHOW US THE WAY!/, (res) ->
     res.send res.random listenUrls
     sleep(3000)
-    channel = "#" + res.message.room
-    location = robot.brain.get(channel.toLowerCase())
+    user = res.message.user.name
+    location = robot.brain.get("#" + channel.toLowerCase())
     if location
       lunchMe(robot, res, location, "food")
+      clearDailyPetitionsByChannel(robot, res)
+      clearPetitions(robot, res)
     else
       res.send "*Where dost thou dwell?*"
 
