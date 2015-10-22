@@ -55,40 +55,50 @@ lunchMe = (msg, location, query, random = true) ->
 
 petitionsMadeTodayByLocation = {}
 
-makePetition = (office, user) ->
+makePetition = (robot, res, office) ->
   office = office.toUpperCase()
+  user = res.message.user.name
   petitions = petitionsMadeTodayByLocation[office]
   if not petitions
     petitions = []
     petitionsMadeTodayByLocation[office] = petitions
   petitions.push user
+  syncPetitionsList(robot)
   
-canPetition = (office, user) ->
+canPetition = (robot, res, office) ->
   office = office.toUpperCase()
+  user = res.message.user.name
   petitions = petitionsMadeTodayByLocation[office] or []
   return user not in petitions
 
-clearDailyPetitionsByOffice = (office) ->
+clearDailyPetitionsByOffice = (robot, office) ->
   office = office.toUpperCase()
   petitionsMadeTodayByLocation[office] = []
+  syncPetitionsList(robot)
+
+syncPetitionsList = (robot) ->
+  brain.set("global.petitionsMadeTodayByLocation", petitionsMadeTodayByLocation)
   
 module.exports = (robot) ->
+  storedPetitionsList = robot.brain.get("global.petitionsMadeTodayByLocation")
+  petitionsMadeTodayByLocation = storedPetitionsList if storedPetitionsList
+  
   robot.respond /dev makePetition (.*)/i, (res) ->
     office = res.match[1]
     user = res.message.user.name
-    makePetition(office, user)
+    makePetition(robot, res, office)
     res.send("added " + user + "@" + office + " to daily petitions list");
   
   robot.respond /dev canPetition (.*)/i, (res) ->
     office = res.match[1]
     user = res.message.user.name
     msg = "can"
-    msg = "cannot" if not canPetition(office, user)
+    msg = "cannot" if not canPetition(robot, res, office)
     res.send(user + "@" + office + " " + msg + " petition again today")
     
   robot.respond /dev clearDailyPetitionsByOffice (.*)/i, (res) ->
     office = res.match[1]
-    clearDailyPetitionsByOffice(office)
+    clearDailyPetitionsByOffice(robot, office)
     res.send("Daily petitions list for @" + office + " has been cleared")
   
   robot.respond /dev printPetitionList/, (res) ->
