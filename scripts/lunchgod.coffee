@@ -76,6 +76,11 @@ weightedRandom = (robot, res, data) ->
 todaysFaithful = {}
 faithfulLocked = false
 
+PETITION_TYPES = [
+  "preference",
+  "distance"
+]
+
 getPetition = (robot, res, petitionType) ->
   return robot.brain.get(res.message.room + ".petitions." + petitionType)
 
@@ -130,10 +135,7 @@ syncFaithful = (robot) ->
   faithfulLocked = false
 
 clearPetitions = (robot, res) ->
-  channel = res.message.room
-  robot.brain.set(channel + ".petitions.food_type", null)
-  robot.brain.set(channel + ".petitions.distance_preference", null)
-  robot.brain.save();
+  setPetition(robot, res, petitionType, null) for petitionType in PETITION_TYPES
 
 module.exports = (robot) ->
   robot.respond /who am i\?/i, (res) ->
