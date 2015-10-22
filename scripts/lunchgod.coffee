@@ -46,16 +46,19 @@ lunchMe = (robot, res, location, query) ->
       return res.send "..."
 
     else
-      return weightedRandom(robot, res, data)
+      return res.send weightedRandom(robot, res, data)
 
 weightedRandom = (robot, res, data) ->
-    index = Math.floor(Math.random() * data.total)
-    location = data.businesses[index]
-    blessing = robot.brain.get(location.toLowerCase()) || 0
-    if ((blessing + maxBless)/range >= Math.random())
-      return location
+    index = Math.floor(Math.random() * data.businesses.length)
+    location = data.businesses[index].name
+    if location
+      blessing = robot.brain.get(location.toLowerCase()) || 0
+      if ((blessing + maxBless)/range >= Math.random())
+        return location
+      else
+        return weightedRandom(robot, res, data)
     else
-      return weightedRandom(robot, res, data)
+      return "..."
 
 petitionsMadeTodayByLocation = {}
 
