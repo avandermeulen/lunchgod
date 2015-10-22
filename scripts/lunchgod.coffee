@@ -59,10 +59,10 @@ weightedRandom = (robot, res, data) ->
     url = data.businesses[index].url
     if location
       blessing = robot.brain.get(location.toLowerCase()) || 0
-      if ((blessing + maxBless)/range >= Math.random())
-        return "On this day, thou shalt go unto " + location + " and be fed. " + url
-      else
-        return weightedRandom(robot, res, data)
+#      if ((blessing + maxBless)/range >= Math.random())
+      return "On this day, thou shalt go unto " + location + " and be fed. " + url
+#      else
+#        return weightedRandom(robot, res, data)ß
     else
       return "....."
 
@@ -140,7 +140,7 @@ module.exports = (robot) ->
       res.reply "THOUST PRAYER HATH BEEN HEARD"
     else
       res.reply "THOUST PRAYERS HATH GONE UNANSWERED"
-  
+
   robot.hear /I listen to you/i, (msg) ->
     sleep(4000)
     msg.send msg.random listenUrls
