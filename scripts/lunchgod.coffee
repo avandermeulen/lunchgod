@@ -2,13 +2,13 @@
 ##      OMNISCIENCE JS
 ##
 `
-var omniscience = 
+var omniscience =
 {
     "ping": function()
     {
         return "I AM AWAKE";
     },
-    
+
     "list": function(location)
     {
         // TODO
@@ -16,15 +16,15 @@ var omniscience =
             {
                 "name": "tios"
             },
-            
+
             {
                 "name": "banditos"
             },
-        
+
             {
                 "name": "grizzly peak"
             },
-            
+
             {
                 "name": "broken egg"
             }
@@ -46,6 +46,8 @@ testList = ['Banditos', 'TK Wu', 'Broken Egg', 'Grizzly Peak', 'Blue Tractor']
 
 maxBless = 10
 minBless = -10
+maxPray = 5
+minPray = -5
 
 
 
@@ -53,12 +55,12 @@ module.exports = (robot) ->
   robot.respond /dev.ping/, (res) ->
     waitASec
     res.send omniscience.ping()
-  
+
   robot.respond /dev.list (.*)/, (res) ->
     waitASec
     location = res.match[1]
     res.send("```" + JSON.stringify(omniscience.list(location), null, "\t") + "```")
-    
+
   robot.respond /bless (.*)/, (res) ->
     waitASec
     target = res.match[1]
@@ -67,6 +69,15 @@ module.exports = (robot) ->
       robot.brain.set(target.toLowerCase(), blessings + 1)
       robot.brain.save()
     res.send "Blessed art #{target}."
+
+  robot.respond /pray (.*)/, (res) ->
+    waitASec
+    target = res.match[1]
+    prays = robot.brain.get(target.toLowerCase()) || 0
+    if prays < maxPray
+      robot.brain.set(target.toLowerCase(), prays + 1)
+      robot.brain.save()
+    res.send "Prayed art #{target}."
 
   robot.respond /curse (.*)/, (res) ->
     waitASec
@@ -91,7 +102,7 @@ module.exports = (robot) ->
       res.send "#{target} art blessed."
     else if blessings < 0
       res.send "#{target} art cursed."
-  
+
   robot.respond /show us the way[!]?/, (res) ->
     waitASec
     res.send "I can not hear thou."
@@ -109,7 +120,7 @@ module.exports = (robot) ->
     waitASec
     name = res.message.user.name
     res.send "@#{name}: " + res.random enterReplies
-  
+
   robot.leave (res) ->
     waitASec
     name = res.message.user.name
