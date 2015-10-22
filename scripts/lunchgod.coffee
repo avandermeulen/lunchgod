@@ -195,9 +195,9 @@ module.exports = (robot) ->
 
   robot.respond /smite ([^ ]+)/i, (res) ->
     if canPetition(robot, res)
-      makePetition(robot, res)
       user = res.match[1]
       makePetition(robot, res, user)
+      makePetition(robot, res)
       res.send "*I smite thou #{user}*"
 
   robot.respond /init/, (res) ->
