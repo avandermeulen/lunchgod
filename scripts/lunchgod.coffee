@@ -137,7 +137,7 @@ module.exports = (robot) ->
   robot.respond /yelp me(.*)/i, (res) ->
     query = res.match[1]
     listenToGodImg res
-    lunchMe res, query, false
+    #lunchMe res, query, false
   robot.respond /init/, (res) ->
     waitASec
     robot.brain.set('prayrecord',testPrays)
