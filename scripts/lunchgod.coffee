@@ -121,8 +121,9 @@ PRAYERS = [
     petitionType: "preference",
     
     regularExpressions: [
-      /(?:(?:(?:(?:i +am)|(?:i'?m)|(?:we +are)|(?:we'?re)) +(?:(?:(?:(?:in +the +mood)|(?:hungry)) +for)|(?:craving)|(?:feeling)))|(?:(?:(?:i)|(?:we))(?: +have +a +hankering +for)|(?: +could +go +for)|(?: +want)|(?: +would +(?:(?:like)|(?:prefer))))|(?:(?:(?:i)|(?:we)) +feel +like))(?: +(?:(?:some)|(?:a)))? +(.+)/i 
+      /(?:(?:(?:(?:i +am)|(?:i'?m)|(?:we +are)|(?:we'?re)) +(?:(?:(?:(?:in +the +mood)|(?:hungry)) +for)|(?:craving)|(?:feeling)))|(?:(?:(?:i)|(?:we))(?: +(?:(?:have)|(?:'?ve got)) +a +hankering +for)|(?: +could +go +for)|(?: +want)|(?: +(?:(?:'?d)|(?:would)) +(?:(?:like)|(?:prefer))))|(?:(?:(?:i)|(?:we)) +feel +like))(?: +(?:(?:some)|(?:a)))? +(.+)/i 
     ],
+    
     handler: null
   }
 ]
@@ -221,7 +222,7 @@ parsePrayer = (robot, res, prayerText) ->
         runPrayer(robot, res, prayer, prayerText, match[1])
         return
   
-  res.reply "*Thoust words confuse and enrage me*"
+  res.reply "*Thine words art blaphemous*"
 
 runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
     if canPetition(robot, res)
@@ -329,7 +330,7 @@ module.exports = (robot) ->
 
   robot.respond /show us the way[!]?/, (res) ->
     waitASec
-    res.send "*I can not hear thou.*"
+    res.send "*I cannot hear thou.*"
 
   robot.respond /SHOW US THE WAY!/, (res) ->
     waitASec
