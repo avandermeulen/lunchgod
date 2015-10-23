@@ -269,7 +269,7 @@ module.exports = (robot) ->
     channel = res.message.room
     channelKey = "#{channel}.history"
     history = robot.brain.get(channelKey) || []
-    res.send history.join(", ")
+    res.send history.reverse().join(", ")
 
   robot.respond /smite ([^ ]+)/i, (res) ->
     if canPetition(robot, res)
