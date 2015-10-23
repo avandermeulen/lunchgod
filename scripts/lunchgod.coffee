@@ -222,6 +222,9 @@ module.exports = (robot) ->
   robot.respond /dev force_old_testament_mode/i, (res) ->
     res.send(FORCE_OLD_TESTAMENT_MODE)
   
+  robot.respond /dev oldTestamentLevel/i, (res) ->
+    res.send("old t level: " + robot.brain.get(res.channel.room + ".oldTestament"))
+  
   robot.respond /who am i\?/i, (res) ->
     res.reply(res.message.user.name)
   
