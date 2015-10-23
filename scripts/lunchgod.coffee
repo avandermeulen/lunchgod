@@ -40,10 +40,17 @@ lunchMe = (robot, res, location, query) ->
   query = "food" if not query
   query = query.replace(trim_re, '')
   query = "food" if query == ""
-
+  
+  myRadius = radius
+  
+  if isOldTestamentMode(robot, res)
+    query = "frita batidos"
+    location = "117 W Washington St, Ann Arbor, MI 48104"
+    myRadius = 1
+    
   # Perform the search
   #msg.send("Looking for #{query} around #{location}...")
-  yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 20, location: location, (error, data) ->
+  yelp.search category_filter: "restaurants", term: query, radius_filter: myRadius, sort: sort, limit: 20, location: location, (error, data) ->
     if error != null
       return res.send "..."
 
@@ -139,6 +146,28 @@ syncPetitioners = (robot) ->
 clearPetitions = (robot, res) ->
   setPetition(robot, res, petitionType, null) for petitionType in PETITION_TYPES
 
+getVengenceLevel = (robot, res) ->
+  level = robot.brain.get(res.message.room + ".vengence")
+  if not level
+    randomizeVengence(robot, res)
+    return getVengenceLevel(robot, res)
+  else
+    return 
+
+randomizeVengence = (robot, res) ->
+  maximum = vengefulPics.length - 1
+  robot.brain.set(res.message.room + ".vengence", Math.floor(Math.random() * (maximum + 1)) - 1)
+  if (Math.random() < 1 / 365)
+    robot.brain.set("global.vengence", vengefulPics.length)
+  
+  robot.brain.save()
+
+isOldTestamentMode = (robot, res) ->
+  return true
+  if getVengenceLevel(robot, res) = vengefulPics.length
+    return true
+  return false
+  
 module.exports = (robot) ->
   robot.respond /who am i\?/i, (res) ->
     res.reply(res.message.user.name)
@@ -271,6 +300,7 @@ module.exports = (robot) ->
         lunchMe(robot, res, location)
         clearPetitionersByChannel(robot, res)
         clearPetitions(robot, res)
+        randomizeVengence(robot, res)
       else
         res.send "*I am resting...*"
     else
