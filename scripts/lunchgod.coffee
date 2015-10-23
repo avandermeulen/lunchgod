@@ -188,10 +188,9 @@ getVengenceLevel = (robot, res) ->
 
 randomizeVengence = (robot, res) ->
   maximum = vengefulPics.length - 1
-  robot.brain.set(res.message.room + ".vengence", Math.floor(Math.random() * maximum)
+  robot.brain.set(res.message.room + ".vengence", Math.floor(Math.random() * maximum))
   if (Math.random() < 1 / 365)
     startOldTestamentMode(robot, res)
-  
   robot.brain.save()
 
 isOldTestamentMode = (robot, res) ->
