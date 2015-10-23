@@ -74,7 +74,7 @@ lunchMe = (robot, res, location, query) ->
   query = query.replace(trim_re, '')
   query = "food" if query == ""
   
-  console.log("using query: #{query}")
+  console.log("using query \"#{query}\" for @#{res.message.room}")
   myRadius = RADIUS
     
   # Perform the search
@@ -219,8 +219,6 @@ reduceOldTestament = (robot, res) ->
   robot.brain.save()
 
 parsePrayer = (robot, res, prayerText) ->
-  console.log("prayerText: #{prayerText}")
-  
   for prayer in PRAYERS
     for regex in prayer.regularExpressions
       match = prayerText.match(regex)
@@ -231,20 +229,17 @@ parsePrayer = (robot, res, prayerText) ->
   res.reply "*Thine words art blaphemous*"
 
 runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
-    console.log("prayerSubject: #{prayerSubject}")
-    
     if canPetition(robot, res)
       makePetition(robot, res)
       if (Math.random() <= PRAYER_PROBABILITY)
+        console.log("accepted prayer from #{res.message.user.name}@#{res.message.room}") setting a #{prayer.petitionType}
         if prayer.handler
-            console.log("using custom prayer handler")
+            console.log("using custom prayer handler for #{res.message.user.name}@#{res.message.room}'s prayer \"#{prayerText}\"")
             prayer.handler(robot, res, prayerText, prayerSubject)
-          else
-            console.log("using builtin prayer handler")
-            console.log("prayer.petitionType: #{prayer.petitionType}")
-            console.log("prayerSubject:       #{prayerSubject}")
-            setPetition(robot, res, prayer.petitionType, prayerSubject)
-            
+        else
+          console.log("#{res.message.room} now has a #{prayer.petitionType} for \"#{getPetition(robot, res, prayer.petitionType)}\"")
+          setPetition(robot, res, prayer.petitionType, prayerSubject)
+        
         res.reply "*Thoust prayers hath been heard*"
       else
         res.reply "*Thoust prayers hath gone unanswered*"
