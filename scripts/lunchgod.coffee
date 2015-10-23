@@ -9,33 +9,6 @@ listenUrls = [
   "http://sevenstorylearning.com/wp-content/uploads/2011/05/Listen-by-BRosen.jpg"
 ]
 
-vengefulPics = [
-  "http://kitcampbell.com/wp-content/uploads/2013/09/spilt-milk-for-web.jpg", # Spilt Milk
-  "http://online.thatsmags.com/uploads/content/1406/4317/toiletRoll_2441938b.jpg", # Out of Toilet Paper
-  "http://cdn.sheknows.com/articles/2013/07/Mike/SK/Dog-sitting-chewe-up-mess.jpg", # Bad Dog
-  "https://tribwgntv.files.wordpress.com/2015/07/parkingticket.jpg?w=640", # Parking Ticket
-  "http://pictures.dealer.com/c/checkeredflag/1270/cec6218e0a0d02b701019275346b7fe5.png", # Bad Traffic
-  "http://cdn.zmescience.com/wp-content/uploads/2012/05/thundercloud-storm.jpg", # Storm Clouds
-  "http://www.sampletekk.com/image/data/product_desc/Rain%20Piano%20MkII/050713rain-620x413.jpg", # Rain
-  "http://www.scienceclarified.com/photos/thunderstorm-3033.jpg", # Thunder Storm
-  "https://www.ok.gov/oid/images/tornado.jpg", # Tornado
-  "http://msnbcmedia.msn.com/j/MSNBC/Components/Photo/_new/pb-110905-fires-da-02.photoblog900.jpg", # Wildfire
-  "http://www.blog-n-play.com/wp-content/uploads/2015/06/040620-120317-inq-flood.jpg", # Flood
-  "http://blogs.agu.org/landslideblog/files/2015/06/15_06-Malaysia-3.jpg", # Earthquake
-  "http://www.sportsftw.com/wp-content/uploads/2015/01/tsunami.jpg", # Tsunami
-  "http://imgc.allpostersimages.com/images/P-473-488-90/38/3880/2WZJF00Z/posters/mike-theiss-palm-trees-blasted-by-winds-over-100-mph-during-hurricane-wilma.jpg", # Hurricane Winds
-  "http://images.nationalgeographic.com/wpf/media-live/photos/000/002/cache/hurricane-ivan_200_600x450.jpg", # Hurricane from space
-  "http://www.standeyo.com/NEWS/07_Earth_Changes/07_Earth_Change_pics/070316.Popocatepetl.jpg", # Volcano with Ash
-  "http://www.noahmintz.com/volcano.jpg", # Volcano with Fire
-  "http://i.kinja-img.com/gawker-media/image/upload/s--C3EUsPuw--/17mt53o7rtznrjpg.jpg", # Volcano with Fire and Lightning
-  "https://marciokenobi.files.wordpress.com/2012/12/end-of-the-world-3.jpg", # Nuke
-  "http://africarm.org/site/wp-content/uploads/2014/01/illustration-of-noahs_ark.jpg", # Noah's Ark
-  "http://beforeitsnews.com/contributor/upload/427270/images/prophecy.jpg", # Hellfire
-  "http://img08.deviantart.net/ef26/i/2009/332/e/2/the_end_of_the_world_by_0bo.jpg", # Giant Demon
-  "http://www.isciencemag.co.uk/wp-content/uploads/2011/06/Meteorite-impact.jpg", # Meteorite Impact
-  "http://i.telegraph.co.uk/multimedia/archive/02433/_end-of-the-world_2433119b.jpg" # Earth Explodes
-]
-
 maxBless = process.env.BLESS_RANGE
 minBless = process.env.BLESS_RANGE * -1
 DENOUNCE_COUNT = process.env.DENOUNCE_COUNT
@@ -191,7 +164,7 @@ randomizeVengence = (robot, res) ->
 
 isOldTestamentMode = (robot, res) ->
   return true
-  if getVengenceLevel(robot, res) = vengefulPics.length
+  if getVengenceLevel(robot, res) == vengefulPics.length
     return true
   return false
   
@@ -334,20 +307,20 @@ module.exports = (robot) ->
       res.send "*Where dost thou dwell?*"
 
   robot.hear /.+ lunch[ ]?god/i, (res) ->
-    waitASec()
+    waitASec
     name = res.message.user.name
     res.reply "*Thou shalt not take My Name in vain!*"
 
   robot.respond /nyan/, (res) ->
-    waitASec()
+    waitASec
     res.send "http://www.cc.gatech.edu/~hays/compvision/results/proj1/dpuleri3/hybrid_gif/nyanCat.gif"
 
   robot.enter (res) ->
-    waitASec()
+    waitASec
     res.reply res.random enterReplies
 
   robot.leave (res) ->
-    waitASec()
+    waitASec
     res.reply res.random leaveReplies
 
 sleep = (ms) ->
