@@ -232,7 +232,7 @@ runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
     if canPetition(robot, res)
       makePetition(robot, res)
       if (Math.random() <= PRAYER_PROBABILITY)
-        console.log("accepted prayer from #{res.message.user.name}@#{res.message.room}") setting a #{prayer.petitionType}
+        console.log("accepted prayer from #{res.message.user.name}@#{res.message.room}")
         if prayer.handler
             console.log("using custom prayer handler for #{res.message.user.name}@#{res.message.room}'s prayer \"#{prayerText}\"")
             prayer.handler(robot, res, prayerText, prayerSubject)
