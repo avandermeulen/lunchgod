@@ -115,8 +115,7 @@ todaysPetitioners = {}
 petitionersLocked = false
 
 PETITION_TYPES = [
-  "preference",
-  "distance"
+  "preference"
 ]
 
 PRAYERS = [
@@ -251,10 +250,10 @@ module.exports = (robot) ->
   robot.respond /(?:, +)?who am i\?/i, (res) ->
     res.reply(res.message.user.name)
   
-  robot.respond /where (?:(?:am i)|(?:are we))\?/i, (res) ->
+  robot.respond /(?:, +)?where (?:(?:am i)|(?:are we))\?/i, (res) ->
     res.reply(res.message.room)
   
-  robot.respond /hear +(?:(?:my)|(?:our)) +prayers?[.,:!;]? +(.*)/i, (res) ->
+  robot.respond /(?:, +)?hear +(?:(?:my)|(?:our)) +prayers?[.,:!;]? +(.*)/i, (res) ->
     waitASec
     parsePrayer(robot, res, res.match[1])
   
@@ -273,24 +272,24 @@ module.exports = (robot) ->
         robot.brain.set(channelDenounceKey, denounceCount)
         robot.brain.save()
 
-  robot.respond /sayeth our history/i, (res) ->
+  robot.respond /(?:, +)?sayeth our history/i, (res) ->
     channel = res.message.room
     channelKey = "#{channel}.history"
     history = robot.brain.get(channelKey) || []
     res.send history.reverse().join(", ")
 
-  robot.respond /smite ([^ ]+)/i, (res) ->
+  robot.respond /(?:, +)?smite ([^ ]+)/i, (res) ->
     if canPetition(robot, res)
       user = res.match[1]
       makePetition(robot, res, user)
       makePetition(robot, res)
       res.send "*I smite thou #{user}*"
 
-  robot.respond /how vengeful art Thou\?/i, (res) ->
+  robot.respond /(?:, +)?how vengeful art Thou\?/i, (res) ->
     index = getVengenceLevel(robot, res)
     res.send vengefulPics[index]
 
-  robot.respond /bless (.*)/, (res) ->
+  robot.respond /(?:, +)?bless (.*)/, (res) ->
     waitASec()
     if canPetition(robot, res)
       makePetition(robot, res)
@@ -301,7 +300,7 @@ module.exports = (robot) ->
         robot.brain.save()
       res.send "*Blessed art #{target}.*"
 
-  robot.respond /curse (.*)/, (res) ->
+  robot.respond /(?:, +)?curse (.*)/, (res) ->
     waitASec()
     if canPetition(robot, res)
       makePetition(robot, res)
@@ -312,7 +311,7 @@ module.exports = (robot) ->
         robot.brain.save()
       res.send "*Cursed art #{target}.*"
 
-  robot.respond /how blessed art (.*)\?/, (res) ->
+  robot.respond /(?:, +)?how blessed art (.*)\?/, (res) ->
     waitASec()
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
@@ -327,11 +326,11 @@ module.exports = (robot) ->
     else if blessings < 0
       res.send "*#{target} art cursed.*"
 
-  robot.respond /help/i, (res) ->
+  robot.respond /(?:, +)?help/i, (res) ->
     waitASec()
     res.send "*The 10 Commands*\n1. SHOW US THE WAY!\n2. Bless [RESTAURANT]\n3. Curse [RESTAURANT]\n4. How blessed art [RESTAURANT]?\n5. We dwell in/at [LOCATION]\n6. Hear my prayers: I am in the mood for [SOMETHING]\n7. How vengeful art Thou?\n8. Smite [PERSON]\n9. I denounce it\n10. Sayeth our history"
 
-  robot.respond /we dwell (in|at) (.*)/, (res) ->
+  robot.respond /(?:, +)?we dwell (in|at) (.*)/, (res) ->
     waitASec()
     location = res.match[2]
     channel = "#" + res.message.room
@@ -339,11 +338,11 @@ module.exports = (robot) ->
     robot.brain.save()
     res.send "*Henceforth My hearty aroma shalt waft upon #{location}*"
 
-  robot.respond /show us the way[!]?/, (res) ->
+  robot.respond /(?:, +)?show us the way[!]?/, (res) ->
     waitASec()
     res.send "*I cannot hear thou.*"
 
-  robot.respond /SHOW US THE WAY!/, (res) ->
+  robot.respond /(?:, +)?SHOW US THE WAY!/, (res) ->
     waitASec()
     channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
@@ -363,7 +362,7 @@ module.exports = (robot) ->
     waitASec()
     res.reply "*Thou shalt not take My Name in vain!*"
 
-  robot.respond /nyan/, (res) ->
+  robot.respond /(?:, +)?nyan/, (res) ->
     waitASec()
     res.send "http://www.cc.gatech.edu/~hays/compvision/results/proj1/dpuleri3/hybrid_gif/nyanCat.gif"
 
