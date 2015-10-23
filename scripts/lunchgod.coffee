@@ -321,18 +321,8 @@ module.exports = (robot) ->
       res.send "*#{target} art cursed.*"
 
   robot.respond /help/i, (res) ->
-    waitASec
-    res.send "*The 10 Commands*"
-    res.send "1. SHOW US THE WAY!"
-    res.send "2. Bless [RESTAURANT]"
-    res.send "3. Curse [RESTAURANT]"
-    res.send "4. How blessed art [RESTAURANT]?"
-    res.send "5. We dwell in/at [LOCATION]"
-    res.send "6. Hear my prayers: I am in the mood for [SOMETHING]"
-    res.send "7. How vengeful art Thou?"
-    res.send "8. Smite [PERSON]"
-    res.send "9. I denounce it"
-    res.send "10. Sayeth our history"
+    waitASec()
+    res.send "*The 10 Commands*\n1. SHOW US THE WAY!\n2. Bless [RESTAURANT]\n3. Curse [RESTAURANT]\n4. How blessed art [RESTAURANT]?\n5. We dwell in/at [LOCATION]\n6. Hear my prayers: I am in the mood for [SOMETHING]\n7. How vengeful art Thou?\n8. Smite [PERSON]\n9. I denounce it\n10. Sayeth our history"
 
   robot.respond /we dwell (in|at) (.*)/, (res) ->
     waitASec
