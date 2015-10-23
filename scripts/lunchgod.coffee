@@ -78,11 +78,6 @@ lunchMe = (robot, res, location, query) ->
   query = "food" if query == ""
   
   myRadius = radius
-  
-  if isOldTestamentMode(robot, res)
-    query = "frita batidos"
-    location = "117 W Washington St, Ann Arbor, MI 48104"
-    myRadius = 1
     
   # Perform the search
   #msg.send("Looking for #{query} around #{location}...")
@@ -199,6 +194,7 @@ randomizeVengence = (robot, res) ->
   robot.brain.save()
 
 isOldTestamentMode = (robot, res) ->
+  return true if FORCE_OLD_TESTAMENT_MODE
   return parseInt(robot.brain.get(res.message.room + ".oldTestament") || "0") > 0
 
 startOldTestamentMode = (robot, res) ->
