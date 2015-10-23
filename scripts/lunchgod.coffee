@@ -346,7 +346,7 @@ module.exports = (robot) ->
     channel = "#" + res.message.room
     robot.brain.set(channel.toLowerCase(), location)
     robot.brain.save()
-    res.send "*Henceforth My aroma shalt waft upon #{location}*"
+    res.send "*Henceforth My hearty aroma shalt waft upon #{location}*"
 
   robot.respond /show us the way[!]?/, (res) ->
     waitASec()
