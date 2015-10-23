@@ -16,6 +16,7 @@ DENOUNCE_COUNT = process.env.DENOUNCE_COUNT
 REST_TIME = parseInt(process.env.LUNCHGOD_REST_TIME)
 PRAYER_PROBABILITY = process.env.PRAYER_PROBABILITY
 MAX_HISTORY = process.env.MAX_HISTORY
+FORCE_OLD_TESTAMENT_MODE = process.env.FORCE_OLD_TESTAMENT_MODE
 
 range = (maxBless - minBless)
 
@@ -158,12 +159,13 @@ randomizeVengence = (robot, res) ->
   maximum = vengefulPics.length - 1
   robot.brain.set(res.message.room + ".vengence", Math.floor(Math.random() * (maximum + 1)) - 1)
   if (Math.random() < 1 / 365)
-    robot.brain.set("global.vengence", vengefulPics.length)
+    robot.brain.set(res.message.room + ".vengence", vengefulPics.length)
   
   robot.brain.save()
 
 isOldTestamentMode = (robot, res) ->
-  return true
+  if FORCE_OLD_TESTAMENT_MODE == "true"
+    return true
   if getVengenceLevel(robot, res) == vengefulPics.length
     return true
   return false
