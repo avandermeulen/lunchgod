@@ -237,7 +237,7 @@ runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
             console.log("@@@using custom prayer handler for #{res.message.user.name}@#{res.message.room}'s prayer \"#{prayerText}\"")
             prayer.handler(robot, res, prayerText, prayerSubject)
         else
-          console.log("@@@#{res.message.room} now has a #{prayer.petitionType} for \"#{prayerSubject}\"")
+          console.log("@@@@#{res.message.room} now has a #{prayer.petitionType} for \"#{prayerSubject}\"")
           setPetition(robot, res, prayer.petitionType, prayerSubject)
         
         res.reply "*Thoust prayers hath been heard*"
