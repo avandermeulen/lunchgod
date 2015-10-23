@@ -184,7 +184,7 @@ getVengenceLevel = (robot, res) ->
     randomizeVengence(robot, res)
     return getVengenceLevel(robot, res)
   else
-    return 
+    return level
 
 randomizeVengence = (robot, res) ->
   maximum = vengefulPics.length - 1
