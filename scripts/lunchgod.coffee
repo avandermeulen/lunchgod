@@ -202,6 +202,9 @@ isOldTestamentMode = (robot, res) ->
   return false
   
 module.exports = (robot) ->
+  robot.respond /dev isOldTestamentMode/i, (res) ->
+    res.reply(isOldTestamentMode(robot, res))
+    
   robot.respond /who am i\?/i, (res) ->
     res.reply(res.message.user.name)
   
