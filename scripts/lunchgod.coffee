@@ -240,10 +240,10 @@ runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
           console.log("@@@@#{res.message.room} now has a #{prayer.petitionType} for \"#{prayerSubject}\"")
           setPetition(robot, res, prayer.petitionType, prayerSubject)
         
-        res.reply "*Thoust prayers hath been heard*"
+        res.reply "*Thine prayers hath been heard*"
       else
         console.log("@@@rejected prayer from #{res.message.user.name}@#{res.message.room} for \"prayerText\"")
-        res.reply "*Thoust prayers hath gone unanswered*"
+        res.reply "*Thine prayers hath gone unanswered*"
     else
       res.reply "*Beware my wrath, my child*"
   
