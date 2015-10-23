@@ -226,7 +226,7 @@ parsePrayer = (robot, res, prayerText) ->
 runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
     if canPetition(robot, res)
       makePetition(robot, res)
-      preference = res.match[1]
+      match = res.match[1]
       if (Math.random() <= PRAYER_PROBABILITY)
         if prayer.handler
             prayer.handler(robot, res, prayerText, match[1])
