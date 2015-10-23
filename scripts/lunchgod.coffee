@@ -66,7 +66,7 @@ lunchMe = (robot, res, location, query) ->
   if isOldTestamentMode(robot, res)
     if FORCE_OLD_TESTAMENT_MODE == "false" and DISABLE_OLD_TESTAMENT_MODE == "false" and isOldTestamentMode(robot, res)
       reduceOldTestament(robot, res)
-    return res.send("*Enjoy thine myocardial infarction -- Frita Batidos* http://www.yelp.com/biz/frita-batidos-ann-arbor")
+    return res.send("*Enjoy thine myocardial infarction -- Frita Batidos*\nhttp://www.yelp.com/biz/frita-batidos-ann-arbor")
   
   # Clean up the query
   query = getPetition(robot, res, "preference") if not query
@@ -105,7 +105,7 @@ weightedRandom = (robot, res, data) ->
       robot.brain.set(channelHistoryKey, history)
       robot.brain.set(channelDenounceKey, 0)
       robot.brain.save()
-      return "*On this day, thou shalt go unto " + location.name + " and be fed. *" + location.url
+      return "*On this day, thou shalt go unto " + location.name + " and be fed.*\n" + location.url
     else
       return weightedRandom(robot, res, data)
   else
