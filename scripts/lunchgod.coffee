@@ -238,8 +238,12 @@ runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
       match = res.match[1]
       if (Math.random() <= PRAYER_PROBABILITY)
         if prayer.handler
+            console.log("using custom prayer handler")
             prayer.handler(robot, res, prayerText, match[1])
           else
+            console.log("using builtin prayer handler")
+            console.log("prayer.petitionType: #{prayer.petitionType}")
+            console.log("match[1]:            #{match[1]}")
             setPetition(robot, res, prayer.petitionType, match[1])
             
         res.reply "*Thoust prayers hath been heard*"
