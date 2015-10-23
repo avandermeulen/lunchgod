@@ -219,6 +219,8 @@ reduceOldTestament = (robot, res) ->
   robot.brain.save()
 
 parsePrayer = (robot, res, prayerText) ->
+  console.log("prayerText: #{prayerText}")
+  
   for prayer in PRAYERS
     for regex in prayer.regularExpressions
       match = prayerText.match(regex)
@@ -229,6 +231,8 @@ parsePrayer = (robot, res, prayerText) ->
   res.reply "*Thine words art blaphemous*"
 
 runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
+    console.log("prayerSubject: #{prayerSubject}")
+    
     if canPetition(robot, res)
       makePetition(robot, res)
       match = res.match[1]
