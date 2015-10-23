@@ -42,6 +42,7 @@ REST_TIME = parseInt(process.env.LUNCHGOD_REST_TIME)
 PRAYER_PROBABILITY = process.env.PRAYER_PROBABILITY
 MAX_HISTORY = process.env.MAX_HISTORY
 FORCE_OLD_TESTAMENT_MODE = process.env.FORCE_OLD_TESTAMENT_MODE
+DISABLE_OLD_TESTAMENT_MODE = process.env.DISABLE_OLD_TESTAMENT_MODE
 
 range = (maxBless - minBless)
 
@@ -62,7 +63,7 @@ yelp = require("yelp").createClient consumer_key: consumer_key, consumer_secret:
 
 lunchMe = (robot, res, location, query) ->
   if isOldTestamentMode(robot, res)
-    if not FORCE_OLD_TESTAMENT_MODE
+    if FORCE_OLD_TESTAMENT_MODE == "false" and DISABLE_OLD_TESTAMENT_MODE == "false" and isOldTestamentMode(robot, res)
       reduceOldTestament(robot, res)
     return res.send("*Enjoy thine myocardial infarction -- Frita Batidos* http://www.yelp.com/biz/frita-batidos-ann-arbor")
   
@@ -195,11 +196,12 @@ getVengenceLevel = (robot, res) ->
 randomizeVengence = (robot, res) ->
   maximum = vengefulPics.length - 1
   robot.brain.set(res.message.room + ".vengence", Math.floor(Math.random() * maximum))
-  if (Math.random() < 1 / 365)
+  if DISABLE_OLD_TESTAMENT_MODE == "false" and not isOldTestamentMode(robot, res) and (Math.random() < 1 / 365)
     startOldTestamentMode(robot, res)
   robot.brain.save()
 
 isOldTestamentMode = (robot, res) ->
+  return false if DISABLE_OLD_TESTAMENT_MODE == "true"
   return true if FORCE_OLD_TESTAMENT_MODE == "true"
   return parseInt(robot.brain.get(res.message.room + ".oldTestament") || "0") > 0
 
