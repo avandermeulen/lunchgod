@@ -69,11 +69,12 @@ lunchMe = (robot, res, location, query) ->
     return res.send("*Enjoy thine myocardial infarction -- Frita Batidos*\nhttp://www.yelp.com/biz/frita-batidos-ann-arbor")
   
   # Clean up the query
-  query = getPetition(robot, res, "preference") if typeof query == "undefined"
+  query = getPetition(robot, res, "preference") if not query
   query = "food" if not query
   query = query.replace(trim_re, '')
   query = "food" if query == ""
   
+  console.log("using query: #{query}")
   myRadius = RADIUS
     
   # Perform the search
@@ -218,6 +219,8 @@ reduceOldTestament = (robot, res) ->
   robot.brain.save()
 
 parsePrayer = (robot, res, prayerText) ->
+  console.log("prayerText: #{prayerText}")
+  
   for prayer in PRAYERS
     for regex in prayer.regularExpressions
       match = prayerText.match(regex)
@@ -228,13 +231,19 @@ parsePrayer = (robot, res, prayerText) ->
   res.reply "*Thine words art blaphemous*"
 
 runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
+    console.log("prayerSubject: #{prayerSubject}")
+    
     if canPetition(robot, res)
       makePetition(robot, res)
       match = res.match[1]
       if (Math.random() <= PRAYER_PROBABILITY)
         if prayer.handler
+            console.log("using custom prayer handler")
             prayer.handler(robot, res, prayerText, match[1])
           else
+            console.log("using builtin prayer handler")
+            console.log("prayer.petitionType: #{prayer.petitionType}")
+            console.log("match[1]:            #{match[1]}")
             setPetition(robot, res, prayer.petitionType, match[1])
             
         res.reply "*Thoust prayers hath been heard*"
@@ -246,7 +255,7 @@ runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
 module.exports = (robot) ->
   robot.respond /dev ping/, (res) ->
     res.send("playing sound")
-    res.play("butts")
+    res.play("https://files.slack.com/files-pri/T03C1D9JB-F0D355ZNE/download/butts.mp3")
     
   robot.respond /who am i\?/i, (res) ->
     res.reply(res.message.user.name)
