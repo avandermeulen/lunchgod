@@ -194,7 +194,7 @@ randomizeVengence = (robot, res) ->
   robot.brain.save()
 
 isOldTestamentMode = (robot, res) ->
-  return true if FORCE_OLD_TESTAMENT_MODE
+  return true if FORCE_OLD_TESTAMENT_MODE == "true"
   return parseInt(robot.brain.get(res.message.room + ".oldTestament") || "0") > 0
 
 startOldTestamentMode = (robot, res) ->
