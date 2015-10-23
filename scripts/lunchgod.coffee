@@ -1,5 +1,5 @@
-enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me']
-leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
+enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me', 'Witness My glory!']
+leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!', 'BLASHPEMER!']
 
 vengefulPics = [
   "http://kitcampbell.com/wp-content/uploads/2013/09/spilt-milk-for-web.jpg", # Spilt Milk
@@ -318,6 +318,20 @@ module.exports = (robot) ->
       res.send "*#{target} art blessed.*"
     else if blessings < 0
       res.send "*#{target} art cursed.*"
+
+  robot.respond /help/i, (res) ->
+    waitASec
+    res.send "*The 10 Commands*"
+    res.send "1. SHOW US THE WAY!"
+    res.send "2. Bless [RESTAURANT]"
+    res.send "3. Curse [RESTAURANT]"
+    res.send "4. How blessed art [RESTAURANT]?"
+    res.send "5. We dwell in/at [LOCATION]"
+    res.send "6. Hear my prayers: I am in the mood for [SOMETHING]"
+    res.send "7. How vengeful art Thou?"
+    res.send "8. Smite [PERSON]"
+    res.send "9. I denounce it"
+    res.send "10. Sayeth our history"
 
   robot.respond /we dwell (in|at) (.*)/, (res) ->
     waitASec
