@@ -246,7 +246,7 @@ runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
 module.exports = (robot) ->
   robot.respond /dev ping/, (res) ->
     res.send("playing sound")
-    res.play("butts")
+    res.play("https://files.slack.com/files-pri/T03C1D9JB-F0D355ZNE/download/butts.mp3")
     
   robot.respond /who am i\?/i, (res) ->
     res.reply(res.message.user.name)
