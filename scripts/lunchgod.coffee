@@ -284,7 +284,7 @@ module.exports = (robot) ->
     res.send vengefulPics[index]
 
   robot.respond /bless (.*)/, (res) ->
-    waitASec
+    waitASec()
     if canPetition(robot, res)
       makePetition(robot, res)
       target = res.match[1]
@@ -295,7 +295,7 @@ module.exports = (robot) ->
       res.send "*Blessed art #{target}.*"
 
   robot.respond /curse (.*)/, (res) ->
-    waitASec
+    waitASec()
     if canPetition(robot, res)
       makePetition(robot, res)
       target = res.match[1]
@@ -306,7 +306,7 @@ module.exports = (robot) ->
       res.send "*Cursed art #{target}.*"
 
   robot.respond /how blessed art (.*)\?/, (res) ->
-    waitASec
+    waitASec()
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
     if blessings == 0
@@ -325,7 +325,7 @@ module.exports = (robot) ->
     res.send "*The 10 Commands*\n1. SHOW US THE WAY!\n2. Bless [RESTAURANT]\n3. Curse [RESTAURANT]\n4. How blessed art [RESTAURANT]?\n5. We dwell in/at [LOCATION]\n6. Hear my prayers: I am in the mood for [SOMETHING]\n7. How vengeful art Thou?\n8. Smite [PERSON]\n9. I denounce it\n10. Sayeth our history"
 
   robot.respond /we dwell (in|at) (.*)/, (res) ->
-    waitASec
+    waitASec()
     location = res.match[2]
     channel = "#" + res.message.room
     robot.brain.set(channel.toLowerCase(), location)
@@ -333,11 +333,11 @@ module.exports = (robot) ->
     res.send "*Henceforth My aroma shalt waft upon #{location}*"
 
   robot.respond /show us the way[!]?/, (res) ->
-    waitASec
+    waitASec()
     res.send "*I cannot hear thou.*"
 
   robot.respond /SHOW US THE WAY!/, (res) ->
-    waitASec
+    waitASec()
     channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
     if location
@@ -353,19 +353,19 @@ module.exports = (robot) ->
       res.send "*Where dost thou dwell?*"
 
   robot.hear /.+ lunch[ ]?god/i, (res) ->
-    waitASec
+    waitASec()
     res.reply "*Thou shalt not take My Name in vain!*"
 
   robot.respond /nyan/, (res) ->
-    waitASec
+    waitASec()
     res.send "http://www.cc.gatech.edu/~hays/compvision/results/proj1/dpuleri3/hybrid_gif/nyanCat.gif"
 
   robot.enter (res) ->
-    waitASec
+    waitASec()
     res.reply res.random enterReplies
 
   robot.leave (res) ->
-    waitASec
+    waitASec()
     res.reply res.random leaveReplies
 
 sleep = (ms) ->
