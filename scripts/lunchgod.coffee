@@ -69,7 +69,7 @@ lunchMe = (robot, res, location, query) ->
     return res.send("*Enjoy thine myocardial infarction -- Frita Batidos* http://www.yelp.com/biz/frita-batidos-ann-arbor")
   
   # Clean up the query
-  query = getPetition(robot, res, "preference") if typeof query == "undefined"
+  query = getPetition(robot, res, "preference") if not query
   query = "food" if not query
   query = query.replace(trim_re, '')
   query = "food" if query == ""
