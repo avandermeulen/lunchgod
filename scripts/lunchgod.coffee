@@ -211,14 +211,14 @@ reduceOldTestament = (robot, res) ->
   
 module.exports = (robot) ->
   robot.respond /dev vengenceLevel/i, (res) ->
-    res.send(getVengenceLevel(robot, res))
+    res.send("vengence level: " + getVengenceLevel(robot, res))
   
   robot.respond /dev randomizeVengence/i, (res) ->
     randomizeVengence(robot, res)
-    res.send(getVengenceLevel(robot, res))
+    res.send("vengence level: " + getVengenceLevel(robot, res))
   
   robot.respond /dev isOldTestamentMode/i, (res) ->
-    res.send(isOldTestamentMode(robot, res))
+    res.send("is old testament mode: " + isOldTestamentMode(robot, res))
   
   robot.respond /dev force_old_testament_mode/i, (res) ->
     res.send(FORCE_OLD_TESTAMENT_MODE)
