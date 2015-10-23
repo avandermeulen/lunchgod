@@ -11,15 +11,16 @@ vengefulPics = [
   "http://seanamarasinghe.com/wp-content/uploads/2015/01/coffeescript-jquery-600x360.png", # CoffeeScript
   "http://pictures.dealer.com/c/checkeredflag/1270/cec6218e0a0d02b701019275346b7fe5.png", # Bad Traffic
   "http://www.pumptalk.ca/images/2012_Post_Images/PumpTalkPost_03_1_2012_PHOTO.JPG", # Out of Gas
+  "http://loadstorm.com/files/Car_sliced_by_a_Tree_downed_by_a_Tornado.jpg", # Tree on Car
   "http://cdn.zmescience.com/wp-content/uploads/2012/05/thundercloud-storm.jpg", # Storm Clouds
-  "http://www.sampletekk.com/image/data/product_desc/Rain%20Piano%20MkII/050713rain-620x413.jpg", # Rain
+  "http://biblemesh.com/blog/wp-content/uploads/2013/06/tornado2.jpg", # Stormier Clouds
   "http://www.scienceclarified.com/photos/thunderstorm-3033.jpg", # Thunder Storm
   "https://www.ok.gov/oid/images/tornado.jpg", # Tornado
   "http://msnbcmedia.msn.com/j/MSNBC/Components/Photo/_new/pb-110905-fires-da-02.photoblog900.jpg", # Wildfire
   "http://www.blog-n-play.com/wp-content/uploads/2015/06/040620-120317-inq-flood.jpg", # Flood
   "http://blogs.agu.org/landslideblog/files/2015/06/15_06-Malaysia-3.jpg", # Earthquake
   "http://img.izismile.com/img/img3/20100408/640/swarms_of_different_640_19.jpg", # Locusts
-  "http://www.sportsftw.com/wp-content/uploads/2015/01/tsunami.jpg", # Tsunami
+  "http://strangesounds.org/wp-content/uploads/2015/04/natural-disaster-video.jpg", # Tsunami
   "http://imgc.allpostersimages.com/images/P-473-488-90/38/3880/2WZJF00Z/posters/mike-theiss-palm-trees-blasted-by-winds-over-100-mph-during-hurricane-wilma.jpg", # Hurricane Winds
   "http://images.nationalgeographic.com/wpf/media-live/photos/000/002/cache/hurricane-ivan_200_600x450.jpg", # Hurricane from space
   "http://www.standeyo.com/NEWS/07_Earth_Changes/07_Earth_Change_pics/070316.Popocatepetl.jpg", # Volcano with Ash
