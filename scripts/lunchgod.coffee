@@ -74,7 +74,7 @@ lunchMe = (robot, res, location, query) ->
   query = query.replace(trim_re, '')
   query = "food" if query == ""
   
-  myRadius = radius
+  myRadius = RADIUS
     
   # Perform the search
   #msg.send("Looking for #{query} around #{location}...")
