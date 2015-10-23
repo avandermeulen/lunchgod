@@ -258,11 +258,11 @@ module.exports = (robot) ->
         robot.brain.set(channelDenounceKey, denounceCount)
         robot.brain.save()
 
-  robot.respond /show (?:(?:me)|(?:us)) the history/i, (res) ->
+  robot.respond /sayeth our history/i, (res) ->
     channel = res.message.room
     channelKey = "#{channel}.history"
     history = robot.brain.get(channelKey) || []
-    res.send JSON.stringify(history)
+    res.send history.join(", ")
 
   robot.respond /smite ([^ ]+)/i, (res) ->
     if canPetition(robot, res)
