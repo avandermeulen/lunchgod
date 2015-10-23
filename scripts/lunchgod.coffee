@@ -74,6 +74,7 @@ lunchMe = (robot, res, location, query) ->
   query = query.replace(trim_re, '')
   query = "food" if query == ""
   
+  console.log("using query: #{query}")
   myRadius = RADIUS
     
   # Perform the search
