@@ -67,6 +67,10 @@ yelp = require("yelp").createClient consumer_key: consumer_key, consumer_secret:
 
 
 lunchMe = (robot, res, location, query) ->
+  if isOldTestamentMode(robot, res)
+    reduceOldTestament(robot, res)
+    return "Frita Batidos" 
+  
   # Clean up the query
   query = getPetition(robot, res, "preference") if typeof query == "undefined"
   query = "food" if not query
@@ -190,21 +194,26 @@ randomizeVengence = (robot, res) ->
   maximum = vengefulPics.length - 1
   robot.brain.set(res.message.room + ".vengence", Math.floor(Math.random() * (maximum + 1)) - 1)
   if (Math.random() < 1 / 365)
-    robot.brain.set(res.message.room + ".vengence", vengefulPics.length)
+    startOldTestamentMode(robot, res)
   
   robot.brain.save()
 
 isOldTestamentMode = (robot, res) ->
-  if FORCE_OLD_TESTAMENT_MODE == "true"
-    return true
-  if getVengenceLevel(robot, res) == vengefulPics.length
-    return true
-  return false
+  return parseInt(robot.brain.get(res.message.room + ".oldTestament") || "0") > 0
+
+startOldTestamentMode = (robot, res) ->
+  robot.brain.set(res.message.room + ".oldTestament", 10)
+  robot.brain.save()
+  
+reduceOldTestament = (robot, res) ->
+  newVal = parseInt(res.message.room + ".oldTestament" || "0") - 1
+  newVal = 0 if newVal < 0
+  
+  robot.brain.set(res.message.room + ".oldTestament", newVal)
+  robot.brain.save()
   
 module.exports = (robot) ->
-  robot.respond /dev isOldTestamentMode/i, (res) ->
-    res.reply(isOldTestamentMode(robot, res))
-    
+  
   robot.respond /who am i\?/i, (res) ->
     res.reply(res.message.user.name)
   
