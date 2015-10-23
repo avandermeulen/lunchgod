@@ -1,5 +1,3 @@
-
-
 enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me']
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
 listenUrls = [
@@ -9,7 +7,6 @@ listenUrls = [
   "http://sevenstorylearning.com/wp-content/uploads/2011/05/Listen-by-BRosen.jpg"
 ]
 
-<<<<<<< HEAD
 vengefulPics = [
   "http://kitcampbell.com/wp-content/uploads/2013/09/spilt-milk-for-web.jpg", # Spilt Milk
   "http://sites.psu.edu/brownandblueatpsutwo/wp-content/uploads/sites/14654/2014/09/broken-pencil.jpg", # Broken Pencil
@@ -43,8 +40,6 @@ vengefulPics = [
   "http://i.telegraph.co.uk/multimedia/archive/02433/_end-of-the-world_2433119b.jpg" # Earth Explodes
 ]
 
-=======
->>>>>>> 5f8dbb41b6f96f7e5042dd628bb46a0519d975a3
 maxBless = process.env.BLESS_RANGE
 minBless = process.env.BLESS_RANGE * -1
 DENOUNCE_COUNT = process.env.DENOUNCE_COUNT
@@ -267,6 +262,10 @@ module.exports = (robot) ->
       makePetition(robot, res, user)
       makePetition(robot, res)
       res.send "*I smite thou #{user}*"
+
+  robot.respond /how vengeful art Thou\?/i, (res) ->
+    index = getVengenceLevel(robot, res)
+    res.send vengefulPics[index]
 
   robot.respond /init/, (res) ->
     waitASec
