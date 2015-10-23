@@ -1,5 +1,5 @@
-enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me', 'Witness My glory!']
-leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!', 'BLASHPEMER!']
+enterReplies = ['*A new disciple comes to Me.*', '*Join the flock and be fed.*', '*Come unto Me*', '*Witness My glory!*']
+leaveReplies = ['*Thou art excommunicated.*', '*Why hast thou forsaken Me?*', '*I cast thee out!*', '*BLASHPEMER!*']
 
 vengefulPics = [
   "http://kitcampbell.com/wp-content/uploads/2013/09/spilt-milk-for-web.jpg", # Spilt Milk
