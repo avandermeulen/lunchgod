@@ -51,7 +51,7 @@ token = "UapxC4VIu4D7P6Wqpa8NK8OQLCoclwhb"
 token_secret = "PRQtr_R-GmEffFPTkZ0qSGxR_ic"
 
 # Default search parameters
-radius = 1000
+RADIUS = process.env.RADIUS
 sort = 0
 
 trim_re = /^\s+|\s+$|[\.!\?]+$/g
