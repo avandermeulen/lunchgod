@@ -70,7 +70,7 @@ lunchMe = (robot, res, location, query) ->
   if isOldTestamentMode(robot, res)
     if not FORCE_OLD_TESTAMENT_MODE
       reduceOldTestament(robot, res)
-    return res.send("Enjoy thine myocardial infarction -- Frita Batidos http://www.yelp.com/biz/frita-batidos-ann-arbor")
+    return res.send("*Enjoy thine myocardial infarction -- Frita Batidos* http://www.yelp.com/biz/frita-batidos-ann-arbor")
   
   # Clean up the query
   query = getPetition(robot, res, "preference") if typeof query == "undefined"
