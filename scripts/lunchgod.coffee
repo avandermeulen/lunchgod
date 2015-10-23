@@ -1,11 +1,5 @@
 enterReplies = ['A new disciple comes to Me.', 'Join the flock and be fed.', 'Come unto Me']
 leaveReplies = ['Thou art excommunicated.', 'Why hast thou forsaken Me?', 'I cast thee out!']
-listenUrls = [
-  "http://barbwire.wpengine.netdna-cdn.com/wp-content/uploads/2015/01/hearinggod.jpg",
-  "http://www.stewardshipoflife.org/wordpress/wp-content/uploads/2011/01/3133347219_4c16658dd51-370x280.jpg",
-  "http://newcsj.squarespace.com/storage/listen.png?__SQUARESPACE_CACHEVERSION=1427384743876",
-  "http://sevenstorylearning.com/wp-content/uploads/2011/05/Listen-by-BRosen.jpg"
-]
 
 vengefulPics = [
   "http://kitcampbell.com/wp-content/uploads/2013/09/spilt-milk-for-web.jpg", # Spilt Milk
@@ -122,6 +116,17 @@ PETITION_TYPES = [
   "distance"
 ]
 
+PRAYERS = [
+  {
+    petitionType: "preference",
+    
+    regularExpressions: [
+      /(?:(?:(?:(?:i +am)|(?:i'?m)|(?:we +are)|(?:we'?re)) +(?:(?:(?:(?:in +the +mood)|(?:hungry)) +for)|(?:craving)|(?:feeling)))|(?:(?:(?:i)|(?:we))(?: +have +a +hankering +for)|(?: +could +go +for)|(?: +want)|(?: +would +(?:(?:like)|(?:prefer))))|(?:(?:(?:i)|(?:we)) +feel +like))(?: +(?:(?:some)|(?:a)))? +(.+)/i 
+    ],
+    handler: null
+  }
+]
+
 getPetition = (robot, res, petitionType) ->
   return robot.brain.get(res.message.room + ".petitions." + petitionType)
 
@@ -207,57 +212,44 @@ reduceOldTestament = (robot, res) ->
   
   robot.brain.set(res.message.room + ".oldTestament", newVal)
   robot.brain.save()
-  
-module.exports = (robot) ->
-  robot.respond /dev vengenceLevel/i, (res) ->
-    res.send("vengence level: " + getVengenceLevel(robot, res))
-  
-  robot.respond /dev randomizeVengence/i, (res) ->
-    randomizeVengence(robot, res)
-    res.send("vengence level: " + getVengenceLevel(robot, res))
-  
-  robot.respond /dev isOldTestamentMode/i, (res) ->
-    res.send("is old testament mode: " + isOldTestamentMode(robot, res))
-  
-  robot.respond /dev force_old_testament_mode/i, (res) ->
-    res.send(FORCE_OLD_TESTAMENT_MODE)
-  
-  robot.respond /dev oldTestamentLevel/i, (res) ->
-    res.send("old t level: " + robot.brain.get(res.message.room + ".oldTestament"))
-  
-  robot.respond /who am i\?/i, (res) ->
-    res.reply(res.message.user.name)
-  
-  robot.respond /where (?:(?:am i)|(?:are we))\?/i, (res) ->
-    res.reply(res.message.room)
 
-  robot.respond /read (?:(?:my)|(?:our)) prayers back to (?:(?:me)|(?:us))/i, (res) ->
-    msg = ""
-    msg += (petitionType + ": " + getPetition(robot, res, petitionType) + "\n") for petitionType in PETITION_TYPES
-    res.send(msg.trim())
-    
-  robot.respond /show (?:(?:me)|(?:us)) your petitioners/, (res) ->
-    waitASec
-    shoreUpPetitioners(robot)
-    res.send("```" + JSON.stringify(todaysPetitioners, null, "\t") + "```")
+parsePrayer = (robot, res, prayerText) ->
+  for prayer in PRAYERS
+    for regex in prayer.regularExpressions
+      match = prayerText.match(regex)
+      if match and match.length == 2
+        runPrayer(robot, res, prayer, prayerText, match[1])
+        return
+  
+  res.reply "*Thoust words confuse and enrage me*"
 
-  robot.respond /hear +(?:(?:my)|(?:our)) +prayers?[.,:!;]? +(?:(?:(?:(?:i +am)|(?:i'?m)|(?:we +are)|(?:we'?re)) +(?:(?:(?:(?:in +the +mood)|(?:hungry)) +for)|(?:craving)|(?:feeling)))|(?:(?:(?:i)|(?:we))(?: +have +a +hankering +for)|(?: +could +go +for)|(?: +want)|(?: +would +(?:(?:like)|(?:prefer))))|(?:(?:(?:i)|(?:we)) +feel +like))(?: +(?:(?:some)|(?:a)))? +(.+)/i, (res) ->
-    waitASec
+runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
     if canPetition(robot, res)
       makePetition(robot, res)
       preference = res.match[1]
       if (Math.random() <= PRAYER_PROBABILITY)
-        setPetition(robot, res, "preference", preference)
+        if prayer.handler
+            prayer.handler(robot, res, prayerText, match[1])
+          else
+            setPetition(robot, res, prayer.petitionType, match[1])
+            
         res.reply "*Thoust prayers hath been heard*"
       else
         res.reply "*Thoust prayers hath gone unanswered*"
     else
       res.reply "*Beware my wrath, my child*"
   
-  robot.hear /I listen to you/i, (msg) ->
-    sleep(4000)
-    msg.send msg.random listenUrls
-
+module.exports = (robot) ->
+  robot.respond /who am i\?/i, (res) ->
+    res.reply(res.message.user.name)
+  
+  robot.respond /where (?:(?:am i)|(?:are we))\?/i, (res) ->
+    res.reply(res.message.room)
+  
+  robot.respond /hear +(?:(?:my)|(?:our)) +prayers?[.,:!;]? +(.*)/i, (res) ->
+    waitASec
+    parsePrayer(robot, res, res.match[1])
+  
   robot.hear /denounce/i, (res) ->
     channel = res.message.room
     channelDenounceKey = "#{channel}.denounceCount"
@@ -289,16 +281,6 @@ module.exports = (robot) ->
   robot.respond /how vengeful art Thou\?/i, (res) ->
     index = getVengenceLevel(robot, res)
     res.send vengefulPics[index]
-
-  robot.respond /init/, (res) ->
-    waitASec
-    robot.brain.set('prayrecord',testPrays)
-    robot.brain.save()
-    record = robot.brain.get('prayrecord')['Banditos']
-    res.reply "Banditos #{record}."
-  robot.respond /dev.ping/, (res) ->
-    waitASec
-    res.send omniscience.ping()
 
   robot.respond /bless (.*)/, (res) ->
     waitASec
@@ -350,8 +332,7 @@ module.exports = (robot) ->
     res.send "*I can not hear thou.*"
 
   robot.respond /SHOW US THE WAY!/, (res) ->
-    sleep(1000)
-    user = res.message.user.name
+    waitASec
     channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
     if location
@@ -368,7 +349,6 @@ module.exports = (robot) ->
 
   robot.hear /.+ lunch[ ]?god/i, (res) ->
     waitASec
-    name = res.message.user.name
     res.reply "*Thou shalt not take My Name in vain!*"
 
   robot.respond /nyan/, (res) ->
