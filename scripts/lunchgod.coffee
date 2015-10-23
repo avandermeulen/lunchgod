@@ -9,6 +9,7 @@ listenUrls = [
   "http://sevenstorylearning.com/wp-content/uploads/2011/05/Listen-by-BRosen.jpg"
 ]
 
+<<<<<<< HEAD
 vengefulPics = [
   "http://kitcampbell.com/wp-content/uploads/2013/09/spilt-milk-for-web.jpg", # Spilt Milk
   "http://sites.psu.edu/brownandblueatpsutwo/wp-content/uploads/sites/14654/2014/09/broken-pencil.jpg", # Broken Pencil
@@ -42,6 +43,8 @@ vengefulPics = [
   "http://i.telegraph.co.uk/multimedia/archive/02433/_end-of-the-world_2433119b.jpg" # Earth Explodes
 ]
 
+=======
+>>>>>>> 5f8dbb41b6f96f7e5042dd628bb46a0519d975a3
 maxBless = process.env.BLESS_RANGE
 minBless = process.env.BLESS_RANGE * -1
 DENOUNCE_COUNT = process.env.DENOUNCE_COUNT
@@ -73,10 +76,17 @@ lunchMe = (robot, res, location, query) ->
   query = "food" if not query
   query = query.replace(trim_re, '')
   query = "food" if query == ""
-
+  
+  myRadius = radius
+  
+  if isOldTestamentMode(robot, res)
+    query = "frita batidos"
+    location = "117 W Washington St, Ann Arbor, MI 48104"
+    myRadius = 1
+    
   # Perform the search
   #msg.send("Looking for #{query} around #{location}...")
-  yelp.search category_filter: "restaurants", term: query, radius_filter: radius, sort: sort, limit: 20, location: location, (error, data) ->
+  yelp.search category_filter: "restaurants", term: query, radius_filter: myRadius, sort: sort, limit: 20, location: location, (error, data) ->
     if error != null
       return res.send "..."
 
@@ -172,6 +182,28 @@ syncPetitioners = (robot) ->
 clearPetitions = (robot, res) ->
   setPetition(robot, res, petitionType, null) for petitionType in PETITION_TYPES
 
+getVengenceLevel = (robot, res) ->
+  level = robot.brain.get(res.message.room + ".vengence")
+  if not level
+    randomizeVengence(robot, res)
+    return getVengenceLevel(robot, res)
+  else
+    return 
+
+randomizeVengence = (robot, res) ->
+  maximum = vengefulPics.length - 1
+  robot.brain.set(res.message.room + ".vengence", Math.floor(Math.random() * (maximum + 1)) - 1)
+  if (Math.random() < 1 / 365)
+    robot.brain.set("global.vengence", vengefulPics.length)
+  
+  robot.brain.save()
+
+isOldTestamentMode = (robot, res) ->
+  return true
+  if getVengenceLevel(robot, res) == vengefulPics.length
+    return true
+  return false
+  
 module.exports = (robot) ->
   robot.respond /who am i\?/i, (res) ->
     res.reply(res.message.user.name)
@@ -304,26 +336,27 @@ module.exports = (robot) ->
         lunchMe(robot, res, location)
         clearPetitionersByChannel(robot, res)
         clearPetitions(robot, res)
+        randomizeVengence(robot, res)
       else
         res.send "*I am resting...*"
     else
       res.send "*Where dost thou dwell?*"
 
   robot.hear /.+ lunch[ ]?god/i, (res) ->
-    waitASec()
+    waitASec
     name = res.message.user.name
     res.reply "*Thou shalt not take My Name in vain!*"
 
   robot.respond /nyan/, (res) ->
-    waitASec()
+    waitASec
     res.send "http://www.cc.gatech.edu/~hays/compvision/results/proj1/dpuleri3/hybrid_gif/nyanCat.gif"
 
   robot.enter (res) ->
-    waitASec()
+    waitASec
     res.reply res.random enterReplies
 
   robot.leave (res) ->
-    waitASec()
+    waitASec
     res.reply res.random leaveReplies
 
 sleep = (ms) ->
