@@ -244,6 +244,10 @@ runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
       res.reply "*Beware my wrath, my child*"
   
 module.exports = (robot) ->
+  robot.respond /dev ping/, (res) ->
+    res.send("playing ping sound")
+    res.play("ping")
+    
   robot.respond /who am i\?/i, (res) ->
     res.reply(res.message.user.name)
   
