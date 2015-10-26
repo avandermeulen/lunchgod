@@ -274,7 +274,7 @@ module.exports = (robot) ->
     waitASec
     parsePrayer(robot, res, res.match[1])
   
-  robot.hear /(?:, +)?denounce/i, (res) ->
+  robot.hear /denounce/i, (res) ->
     channel = res.message.room
     channelDenounceKey = "#{channel}.denounceCount"
     if canPetition(robot, res)
@@ -289,7 +289,7 @@ module.exports = (robot) ->
         robot.brain.set(channelDenounceKey, denounceCount)
         robot.brain.save()
 
-  robot.respond /(?:, +)?sayeth our history/i, (res) ->
+  robot.respond /(?:, +)?sayeth +our +history/i, (res) ->
     channel = res.message.room
     channelKey = "#{channel}.history"
     history = robot.brain.get(channelKey) || []
@@ -302,11 +302,11 @@ module.exports = (robot) ->
       makePetition(robot, res)
       res.send "*I smite thou #{user}*"
 
-  robot.respond /(?:, +)?how vengeful art Thou\?/i, (res) ->
+  robot.respond /(?:, +)?how +vengeful +art +Thou\?/i, (res) ->
     index = getVengenceLevel(robot, res)
     res.send vengefulPics[index]
 
-  robot.respond /(?:, +)?bless (.*)/, (res) ->
+  robot.respond /(?:, +)?bless +(.*)/, (res) ->
     waitASec()
     if canPetition(robot, res)
       makePetition(robot, res)
@@ -317,7 +317,7 @@ module.exports = (robot) ->
         robot.brain.save()
       res.send "*Blessed art #{target}.*"
 
-  robot.respond /(?:, +)?curse (.*)/, (res) ->
+  robot.respond /(?:, +)?curse +(.*)/i, (res) ->
     waitASec()
     if canPetition(robot, res)
       makePetition(robot, res)
@@ -328,7 +328,7 @@ module.exports = (robot) ->
         robot.brain.save()
       res.send "*Cursed art #{target}.*"
 
-  robot.respond /(?:, +)?how blessed art (.*)\?/, (res) ->
+  robot.respond /(?:, +)?how +blessed +art (.*)\?/i, (res) ->
     waitASec()
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
@@ -347,7 +347,7 @@ module.exports = (robot) ->
     waitASec()
     res.send "*The 10 Commands*\n1. SHOW US THE WAY!\n2. Bless [RESTAURANT]\n3. Curse [RESTAURANT]\n4. How blessed art [RESTAURANT]?\n5. We dwell in/at [LOCATION]\n6. Hear my prayers: I am in the mood for [SOMETHING]\n7. How vengeful art Thou?\n8. Smite [PERSON]\n9. I denounce it\n10. Sayeth our history"
 
-  robot.respond /(?:, +)?we dwell ((?:in)|(?:at)) (.*)/, (res) ->
+  robot.respond /(?:, +)?we dwell ((?:in)|(?:at)) (.*)/i, (res) ->
     waitASec()
     location = res.match[2]
     channel = "#" + res.message.room
