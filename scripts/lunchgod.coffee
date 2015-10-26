@@ -274,7 +274,7 @@ module.exports = (robot) ->
     waitASec
     parsePrayer(robot, res, res.match[1])
   
-  robot.hear /denounce/i, (res) ->
+  robot.hear /(?:, +)?denounce/i, (res) ->
     channel = res.message.room
     channelDenounceKey = "#{channel}.denounceCount"
     if canPetition(robot, res)
@@ -347,7 +347,7 @@ module.exports = (robot) ->
     waitASec()
     res.send "*The 10 Commands*\n1. SHOW US THE WAY!\n2. Bless [RESTAURANT]\n3. Curse [RESTAURANT]\n4. How blessed art [RESTAURANT]?\n5. We dwell in/at [LOCATION]\n6. Hear my prayers: I am in the mood for [SOMETHING]\n7. How vengeful art Thou?\n8. Smite [PERSON]\n9. I denounce it\n10. Sayeth our history"
 
-  robot.respond /(?:, +)?we dwell (in|at) (.*)/, (res) ->
+  robot.respond /(?:, +)?we dwell ((?:in)|(?:at)) (.*)/, (res) ->
     waitASec()
     location = res.match[2]
     channel = "#" + res.message.room
