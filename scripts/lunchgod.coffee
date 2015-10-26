@@ -355,7 +355,7 @@ module.exports = (robot) ->
     robot.brain.save()
     res.send "*Henceforth My hearty aroma shalt waft upon #{location}*"
 
-  robot.respond /(?:, +)?show us the way[!]?/, (res) ->
+  robot.respond /(?:, +)?show +us +the(?: +(.+))? +way[!]?/, (res) ->
     waitASec()
     res.send "*I cannot hear thou.*"
 
