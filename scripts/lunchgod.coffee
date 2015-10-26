@@ -74,6 +74,19 @@ lunchMe = (robot, res, location, query) ->
   query = query.replace(trim_re, '')
   query = "food" if query == ""
   
+  # Dietary restrictions
+  if res.match[1]
+    recognizedDietaryRestriction = false
+    dietaryRestrictionText = res.match[1].trim()
+    for regexp in DIETARY_RESTRICTIONS
+      if (dietaryRestrictionText.matches(regexp))
+        query += " " + dietaryRestrictionText
+        recognizedDietaryRestriction = true
+        break;
+        
+    if not recognizedDietaryRestriction
+      res.send("*Thine dietary restriction are not My concern*")
+  
   console.log("@@@using query \"#{query}\" for @#{res.message.room}")
   myRadius = RADIUS
     
@@ -128,6 +141,10 @@ PRAYERS = [
     
     handler: null
   }
+]
+
+DIETARY_RESTRICTIONS = [
+  /^gluten.free$/i
 ]
 
 getPetition = (robot, res, petitionType) ->
@@ -228,23 +245,23 @@ parsePrayer = (robot, res, prayerText) ->
   res.reply "*Thine words art blaphemous*"
 
 runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
-    if canPetition(robot, res)
-      makePetition(robot, res)
-      if (Math.random() <= PRAYER_PROBABILITY)
-        console.log("@@@accepted prayer from #{res.message.user.name}@#{res.message.room}")
-        if prayer.handler
-            console.log("@@@using custom prayer handler for #{res.message.user.name}@#{res.message.room}'s prayer \"#{prayerText}\"")
-            prayer.handler(robot, res, prayerText, prayerSubject)
-        else
-          console.log("@@@@#{res.message.room} now has a #{prayer.petitionType} for \"#{prayerSubject}\"")
-          setPetition(robot, res, prayer.petitionType, prayerSubject)
-        
-        res.reply "*Thine prayers hath been heard*"
+  if canPetition(robot, res)
+    makePetition(robot, res)
+    if (Math.random() <= PRAYER_PROBABILITY)
+      console.log("@@@accepted prayer from #{res.message.user.name}@#{res.message.room}")
+      if prayer.handler
+        console.log("@@@using custom prayer handler for #{res.message.user.name}@#{res.message.room}'s prayer \"#{prayerText}\"")
+        prayer.handler(robot, res, prayerText, prayerSubject)
       else
-        console.log("@@@rejected prayer from #{res.message.user.name}@#{res.message.room} for \"prayerText\"")
-        res.reply "*Thine prayers hath gone unanswered*"
+        console.log("@@@@#{res.message.room} now has a #{prayer.petitionType} for \"#{prayerSubject}\"")
+        setPetition(robot, res, prayer.petitionType, prayerSubject)
+        
+      res.reply "*Thine prayers hath been heard*"
     else
-      res.reply "*Beware my wrath, my child*"
+      console.log("@@@rejected prayer from #{res.message.user.name}@#{res.message.room} for \"prayerText\"")
+      res.reply "*Thine prayers hath gone unanswered*"
+  else
+    res.reply "*Beware my wrath, my child*"
   
 module.exports = (robot) ->
   robot.respond /(?:, +)?who am i\?/i, (res) ->
@@ -342,7 +359,7 @@ module.exports = (robot) ->
     waitASec()
     res.send "*I cannot hear thou.*"
 
-  robot.respond /(?:, +)?SHOW US THE WAY!/, (res) ->
+  robot.respond /(?:, +)?SHOW +US +THE(?: +(.+))? +WAY!/, (res) ->
     waitASec()
     channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
