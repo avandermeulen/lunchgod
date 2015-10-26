@@ -79,7 +79,7 @@ lunchMe = (robot, res, location, query) ->
     recognizedDietaryRestriction = false
     dietaryRestrictionText = res.match[1].trim()
     for regexp in DIETARY_RESTRICTIONS
-      if (dietaryRestrictionText.matches(regexp))
+      if (dietaryRestrictionText.match(regexp))
         query += " " + dietaryRestrictionText
         recognizedDietaryRestriction = true
         break;
