@@ -75,6 +75,19 @@ lunchMe = (robot, res, location, query) ->
   query = query.replace(trim_re, '')
   query = "food" if query == ""
   
+  # Dietary restrictions
+  if res.match[1]
+    recognizedDietaryRestriction = false
+    dietaryRestrictionText = res.match[1].trim()
+    for regexp in DIETARY_RESTRICTIONS
+      if (dietaryRestrictionText.match(regexp))
+        query += " " + dietaryRestrictionText
+        recognizedDietaryRestriction = true
+        break;
+        
+    if not recognizedDietaryRestriction
+      res.send("*Thine dietary restriction are not My concern*")
+  
   console.log("@@@using query \"#{query}\" for @#{res.message.room}")
   myRadius = RADIUS
     
@@ -116,8 +129,7 @@ todaysPetitioners = {}
 petitionersLocked = false
 
 PETITION_TYPES = [
-  "preference",
-  "distance"
+  "preference"
 ]
 
 PRAYERS = [
@@ -130,6 +142,10 @@ PRAYERS = [
     
     handler: null
   }
+]
+
+DIETARY_RESTRICTIONS = [
+  /^gluten.free$/i
 ]
 
 getPetition = (robot, res, petitionType) ->
@@ -230,36 +246,32 @@ parsePrayer = (robot, res, prayerText) ->
   res.reply "*Thine words art blaphemous*"
 
 runPrayer = (robot, res, prayer, prayerText, prayerSubject) ->
-    if canPetition(robot, res)
-      makePetition(robot, res)
-      if (Math.random() <= PRAYER_PROBABILITY)
-        console.log("@@@accepted prayer from #{res.message.user.name}@#{res.message.room}")
-        if prayer.handler
-            console.log("@@@using custom prayer handler for #{res.message.user.name}@#{res.message.room}'s prayer \"#{prayerText}\"")
-            prayer.handler(robot, res, prayerText, prayerSubject)
-        else
-          console.log("@@@#{res.message.room} now has a #{prayer.petitionType} for \"#{prayerSubject}\"")
-          setPetition(robot, res, prayer.petitionType, prayerSubject)
-        
-        res.reply "*Thoust prayers hath been heard*"
+  if canPetition(robot, res)
+    makePetition(robot, res)
+    if (Math.random() <= PRAYER_PROBABILITY)
+      console.log("@@@accepted prayer from #{res.message.user.name}@#{res.message.room}")
+      if prayer.handler
+        console.log("@@@using custom prayer handler for #{res.message.user.name}@#{res.message.room}'s prayer \"#{prayerText}\"")
+        prayer.handler(robot, res, prayerText, prayerSubject)
       else
-        console.log("@@@rejected prayer from #{res.message.user.name}@#{res.message.room} for \"prayerText\"")
-        res.reply "*Thoust prayers hath gone unanswered*"
+        console.log("@@@@#{res.message.room} now has a #{prayer.petitionType} for \"#{prayerSubject}\"")
+        setPetition(robot, res, prayer.petitionType, prayerSubject)
+        
+      res.reply "*Thine prayers hath been heard*"
     else
-      res.reply "*Beware my wrath, my child*"
+      console.log("@@@rejected prayer from #{res.message.user.name}@#{res.message.room} for \"prayerText\"")
+      res.reply "*Thine prayers hath gone unanswered*"
+  else
+    res.reply "*Beware my wrath, my child*"
   
 module.exports = (robot) ->
-  robot.respond /dev ping/, (res) ->
-    res.send("playing sound")
-    res.play("https://files.slack.com/files-pri/T03C1D9JB-F0D355ZNE/download/butts.mp3")
-    
-  robot.respond /who am i\?/i, (res) ->
+  robot.respond /(?:, +)?who am i\?/i, (res) ->
     res.reply(res.message.user.name)
   
-  robot.respond /where (?:(?:am i)|(?:are we))\?/i, (res) ->
+  robot.respond /(?:, +)?where (?:(?:am i)|(?:are we))\?/i, (res) ->
     res.reply(res.message.room)
   
-  robot.respond /hear +(?:(?:my)|(?:our)) +prayers?[.,:!;]? +(.*)/i, (res) ->
+  robot.respond /(?:, +)?hear +(?:(?:my)|(?:our)) +prayers?[.,:!;]? +(.*)/i, (res) ->
     waitASec
     parsePrayer(robot, res, res.match[1])
   
@@ -278,24 +290,24 @@ module.exports = (robot) ->
         robot.brain.set(channelDenounceKey, denounceCount)
         robot.brain.save()
 
-  robot.respond /sayeth our history/i, (res) ->
+  robot.respond /(?:, +)?sayeth +our +history/i, (res) ->
     channel = res.message.room
     channelKey = "#{channel}.history"
     history = robot.brain.get(channelKey) || []
     res.send history.reverse().join(", ")
 
-  robot.respond /smite ([^ ]+)/i, (res) ->
+  robot.respond /(?:, +)?smite ([^ ]+)/i, (res) ->
     if canPetition(robot, res)
       user = res.match[1]
       makePetition(robot, res, user)
       makePetition(robot, res)
       res.send "*I smite thou #{user}*"
 
-  robot.respond /how vengeful art Thou\?/i, (res) ->
+  robot.respond /(?:, +)?how +vengeful +art +Thou\?/i, (res) ->
     index = getVengenceLevel(robot, res)
     res.send vengefulPics[index]
 
-  robot.respond /bless (.*)/, (res) ->
+  robot.respond /(?:, +)?bless +(.*)/, (res) ->
     waitASec()
     if canPetition(robot, res)
       makePetition(robot, res)
@@ -306,7 +318,7 @@ module.exports = (robot) ->
         robot.brain.save()
       res.send "*Blessed art #{target}.*"
 
-  robot.respond /curse (.*)/, (res) ->
+  robot.respond /(?:, +)?curse +(.*)/i, (res) ->
     waitASec()
     if canPetition(robot, res)
       makePetition(robot, res)
@@ -317,7 +329,7 @@ module.exports = (robot) ->
         robot.brain.save()
       res.send "*Cursed art #{target}.*"
 
-  robot.respond /how blessed art (.*)\?/, (res) ->
+  robot.respond /(?:, +)?how +blessed +art (.*)\?/i, (res) ->
     waitASec()
     target = res.match[1]
     blessings = robot.brain.get(target.toLowerCase()) || 0
@@ -332,11 +344,11 @@ module.exports = (robot) ->
     else if blessings < 0
       res.send "*#{target} art cursed.*"
 
-  robot.respond /help/i, (res) ->
+  robot.respond /(?:, +)?help/i, (res) ->
     waitASec()
     res.send "*The 10 Commands*\n1. SHOW US THE WAY!\n2. Bless [RESTAURANT]\n3. Curse [RESTAURANT]\n4. How blessed art [RESTAURANT]?\n5. We dwell in/at [LOCATION]\n6. Hear my prayers: I am in the mood for [SOMETHING]\n7. How vengeful art Thou?\n8. Smite [PERSON]\n9. I denounce it\n10. Sayeth our history"
 
-  robot.respond /we dwell (in|at) (.*)/, (res) ->
+  robot.respond /(?:, +)?we dwell ((?:in)|(?:at)) (.*)/i, (res) ->
     waitASec()
     location = res.match[2]
     channel = "#" + res.message.room
@@ -344,11 +356,11 @@ module.exports = (robot) ->
     robot.brain.save()
     res.send "*Henceforth My hearty aroma shalt waft upon #{location}*"
 
-  robot.respond /show us the way[!]?/, (res) ->
+  robot.respond /(?:, +)?show +us +the(?: +(.+))? +way[!]?/, (res) ->
     waitASec()
     res.send "*I cannot hear thou.*"
 
-  robot.respond /SHOW US THE WAY!/, (res) ->
+  robot.respond /(?:, +)?SHOW +US +THE(?: +(.+))? +WAY!/, (res) ->
     waitASec()
     channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
@@ -368,7 +380,7 @@ module.exports = (robot) ->
     waitASec()
     res.reply "*Thou shalt not take My Name in vain!*"
 
-  robot.respond /nyan/, (res) ->
+  robot.respond /(?:, +)?nyan/, (res) ->
     waitASec()
     res.send "http://www.cc.gatech.edu/~hays/compvision/results/proj1/dpuleri3/hybrid_gif/nyanCat.gif"
 
