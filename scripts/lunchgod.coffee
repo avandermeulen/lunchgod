@@ -19,6 +19,7 @@ vengefulPics = [
   "http://msnbcmedia.msn.com/j/MSNBC/Components/Photo/_new/pb-110905-fires-da-02.photoblog900.jpg", # Wildfire
   "http://www.blog-n-play.com/wp-content/uploads/2015/06/040620-120317-inq-flood.jpg", # Flood
   "http://blogs.agu.org/landslideblog/files/2015/06/15_06-Malaysia-3.jpg", # Earthquake
+  "http://graphics8.nytimes.com/images/2007/04/29/us/collapse2.600..jpg", # Bridge Collapse
   "http://img.izismile.com/img/img3/20100408/640/swarms_of_different_640_19.jpg", # Locusts
   "http://strangesounds.org/wp-content/uploads/2015/04/natural-disaster-video.jpg", # Tsunami
   "http://imgc.allpostersimages.com/images/P-473-488-90/38/3880/2WZJF00Z/posters/mike-theiss-palm-trees-blasted-by-winds-over-100-mph-during-hurricane-wilma.jpg", # Hurricane Winds
