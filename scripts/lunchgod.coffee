@@ -4,6 +4,7 @@ leaveReplies = ['*Thou art excommunicated.*', '*Why hast thou forsaken Me?*', '*
 vengefulPics = [
   "http://kitcampbell.com/wp-content/uploads/2013/09/spilt-milk-for-web.jpg", # Spilt Milk
   "http://sites.psu.edu/brownandblueatpsutwo/wp-content/uploads/sites/14654/2014/09/broken-pencil.jpg", # Broken Pencil
+  "http://i1.mirror.co.uk/incoming/article2253524.ece/ALTERNATES/s1200/Slice-of-toast-with-strawberry-jam-upside-down-on-floor.jpg", # Jam on floor
   "http://www.nirsoft.net/utils/bluescreen1.gif", # Blue Screen
   "http://cdn.sheknows.com/articles/2013/07/Mike/SK/Dog-sitting-chewe-up-mess.jpg", # Bad Dog
   "http://online.thatsmags.com/uploads/content/1406/4317/toiletRoll_2441938b.jpg", # Out of Toilet Paper
