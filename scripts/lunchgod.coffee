@@ -357,7 +357,8 @@ module.exports = (robot) ->
     robot.brain.save()
     res.send "*Henceforth My hearty aroma shalt waft upon #{location}*"
 
-  robot.respond /(?:, +)?where +do +(?:(?:we)|(?:i)) +dwell?/i, (res) ->
+  robot.respond /(?:, +)?where +do +(?:(?:we)|(?:i)) +dwell\?/i, (res) ->
+    channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
     if location
       res.reply "*Thoust dwell at #{location}*"
