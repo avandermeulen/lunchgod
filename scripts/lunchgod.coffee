@@ -358,6 +358,7 @@ module.exports = (robot) ->
     res.send "*Henceforth My hearty aroma shalt waft upon #{location}*"
 
   robot.respond /(?:, +)?where +do +(?:(?:we)|(?:i)) +dwell\?/i, (res) ->
+    waitASec()
     channel = res.message.room
     location = robot.brain.get("#" + channel.toLowerCase())
     if location
