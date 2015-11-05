@@ -284,6 +284,12 @@ module.exports = (robot) ->
       denounceCount = robot.brain.get(channelDenounceKey)
       makePetition(robot, res)
       denounceCount += 1
+
+      blessings = robot.brain.get(target.toLowerCase()) || 0
+      if blessings > minBless
+        robot.brain.set(target.toLowerCase(), blessings - 1)
+        robot.brain.save()
+
       if denounceCount >= DENOUNCE_COUNT
         location = robot.brain.get("#" + channel.toLowerCase())
         lunchMe(robot, res, location, "food")
