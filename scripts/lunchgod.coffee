@@ -284,17 +284,18 @@ module.exports = (robot) ->
       denounceCount = robot.brain.get(channelDenounceKey)
       makePetition(robot, res)
       denounceCount += 1
-
-      blessings = robot.brain.get(target.toLowerCase()) || 0
-      if blessings > minBless
-        robot.brain.set(target.toLowerCase(), blessings - 1)
-        robot.brain.save()
-
       if denounceCount >= DENOUNCE_COUNT
+        blessings = robot.brain.get(target.toLowerCase()) || 0
+        if blessings > minBless
+          robot.brain.set(target.toLowerCase(), blessings - 1)
+          robot.brain.save()
         location = robot.brain.get("#" + channel.toLowerCase())
         lunchMe(robot, res, location, "food")
       else
         robot.brain.set(channelDenounceKey, denounceCount)
+        blessings = robot.brain.get(target.toLowerCase()) || 0
+        if blessings > minBless
+          robot.brain.set(target.toLowerCase(), blessings - 1)
         robot.brain.save()
 
   robot.respond /(?:, +)?sayeth +our +history/i, (res) ->
